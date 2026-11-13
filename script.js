@@ -573,6 +573,81 @@ document.addEventListener("DOMContentLoaded", function () {
   }));
   if (searchInput) searchInput.addEventListener("input", filterServices);
 
+  // NOVA SERVICE SELECTION & SQUARE CHECKOUT
+  const checkoutItems = document.getElementById("checkoutItems");
+  const checkoutCount = document.getElementById("checkoutCount");
+  const checkoutSubtotal = document.getElementById("checkoutSubtotal");
+  const checkoutContinue = document.getElementById("checkoutContinue");
+  const checkoutClear = document.getElementById("checkoutClear");
+  const squareLocationUrl = "https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services";
+  const selectedServices = new Map();
+  const formatCheckoutMoney = value => "$" + value.toFixed(2);
+  const checkoutEscape = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  function renderCheckout() {
+    if (!checkoutItems) return;
+    const items = Array.from(selectedServices.values());
+    const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+    if (checkoutCount) checkoutCount.textContent = items.length + (items.length === 1 ? " item" : " items");
+    if (checkoutSubtotal) checkoutSubtotal.textContent = formatCheckoutMoney(subtotal);
+    checkoutItems.innerHTML = items.length ? items.map(item =>
+      '<div class="checkout-line"><div><strong>' + checkoutEscape(item.name) + '</strong><span>' + formatCheckoutMoney(item.price) + '</span></div><button type="button" data-checkout-remove="' + checkoutEscape(item.id) + '" aria-label="Remove ' + checkoutEscape(item.name) + '">Remove</button></div>'
+    ).join("") : '<p class="checkout-empty">Your selection is empty. Add a service to get started.</p>';
+    checkoutItems.querySelectorAll("[data-checkout-remove]").forEach(button => button.addEventListener("click", () => {
+      selectedServices.delete(button.dataset.checkoutRemove);
+      document.querySelectorAll("[data-checkout-add]").forEach(add => {
+        if (add.dataset.checkoutAdd === button.dataset.checkoutRemove) { add.textContent = "Add to selection"; add.classList.remove("is-added"); }
+      });
+      renderCheckout();
+    }));
+    if (checkoutContinue) {
+      checkoutContinue.classList.toggle("is-disabled", !items.length);
+      checkoutContinue.setAttribute("aria-disabled", items.length ? "false" : "true");
+      checkoutContinue.href = items.length === 1 && items[0].bookingUrl ? items[0].bookingUrl : squareLocationUrl;
+      checkoutContinue.textContent = items.length ? "Continue to Square booking" : "Select a service to continue";
+    }
+  }
+  document.querySelectorAll(".service-card").forEach((card, index) => {
+    const content = card.querySelector(".service-content") || card;
+    if (content.querySelector("[data-checkout-add]")) return;
+    const title = card.querySelector("h4")?.textContent?.trim() || "Massage service";
+    const priceText = content.textContent.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
+    const price = priceText ? Number(priceText[1].replace(/,/g, "")) : 0;
+    const bookingUrl = card.querySelector('a[href*="book.squareup.com"]')?.href || squareLocationUrl;
+    const id = "nova-service-" + index;
+    if (!price) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary-button checkout-add-button";
+    button.dataset.checkoutAdd = id;
+    button.textContent = "Add to selection";
+    button.addEventListener("click", () => {
+      if (selectedServices.has(id)) {
+        selectedServices.delete(id);
+        button.textContent = "Add to selection";
+        button.classList.remove("is-added");
+      } else {
+        selectedServices.set(id, {id, name:title, price, bookingUrl});
+        button.textContent = "Added ✓";
+        button.classList.add("is-added");
+      }
+      renderCheckout();
+    });
+    content.appendChild(button);
+  });
+  if (checkoutClear) checkoutClear.addEventListener("click", () => {
+    selectedServices.clear();
+    document.querySelectorAll("[data-checkout-add]").forEach(button => { button.textContent = "Add to selection"; button.classList.remove("is-added"); });
+    renderCheckout();
+  });
+  if (checkoutContinue) checkoutContinue.addEventListener("click", event => {
+    if (!selectedServices.size) { event.preventDefault(); document.getElementById("checkout")?.scrollIntoView({behavior:"smooth"}); return; }
+    if (selectedServices.size > 1) {
+      // Square's public booking page is the secure source of truth for multi-service selection.
+      // Customers confirm their chosen treatments in Square before payment.
+    }
+  });
+  renderCheckout();
+
   // SCROLL REVEALS
   const revealTargets = document.querySelectorAll("main > section,.about-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section");
   revealTargets.forEach((element, index) => {
