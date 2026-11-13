@@ -35,7 +35,7 @@
       </div>
       <nav class="tabs" aria-label="Admin sections">
         <button class="tab active" data-panel="overview">Overview</button>
-        <button class="tab" data-panel="appointments">Appointments</button>
+        <button class="tab" data-panel="appointments">Appointments</button><button class="tab" data-panel="customers">Customers</button><button class="tab" data-panel="invoices">Invoices</button><button class="tab" data-panel="addons">Add-ons</button>
         <button class="tab" data-panel="services">Services & prices</button>
         <button class="tab" data-panel="reviews">Reviews</button>
         <button class="tab" data-panel="payments">Payments & integrations</button>
@@ -59,13 +59,16 @@
       <section class="panel" id="panel-appointments">
         <article class="surface">
           <p class="eyebrow">SQUARE APPOINTMENTS</p><h2>Manage bookings in Square</h2>
-          <p class="muted">The Square booking system manages appointment slots, customer booking details, confirmations, cancellations, rescheduling and reminder settings. Use Square's secure dashboard for private customer and payment information.</p>
+          <p class="muted">Internal appointment log. Square remains the source of truth for live online bookings, availability, confirmations and reminders until an authenticated Square API connection is configured.</p><form class="surface editor" id="appointmentForm"><div class="field-row"><label>Customer name<input id="appointmentName" required maxlength="100"></label><label>Customer email<input id="appointmentEmail" type="email"></label></div><div class="field-row"><label>Phone<input id="appointmentPhone"></label><label>Service<input id="appointmentService"></label></div><label>Date &amp; time<input id="appointmentAt" type="datetime-local" required></label><label>Notes<textarea id="appointmentNotes" rows="2"></textarea></label><button class="gold-button" type="submit">Add appointment record</button><p class="form-message" id="appointmentMessage"></p></form><div id="appointmentsList" class="list-surface"></div>
           <a class="gold-button inline-button" href="https://squareup.com/dashboard" target="_blank" rel="noopener noreferrer">Open Square Dashboard ↗</a>
           <p class="small-note">This admin panel does not store card details or duplicate Square's appointment records.</p>
         </article>
       </section>
 
-      <section class="panel" id="panel-services">
+      
+<section class="panel" id="panel-customers"><div class="section-heading"><div><p class="eyebrow">CLIENT RECORDS</p><h2>Customers</h2></div></div><form class="surface editor" id="customerForm"><div class="field-row"><label>Name<input id="customerName" required maxlength="100"></label><label>Email<input id="customerEmail" type="email" maxlength="160"></label></div><div class="field-row"><label>Phone<input id="customerPhone" maxlength="40"></label><label>Notes<input id="customerNotes" maxlength="500"></label></div><button class="gold-button" type="submit">Save customer</button><p class="form-message" id="customerMessage"></p></form><div id="customersList" class="list-surface"></div></section>
+<section class="panel" id="panel-invoices"><div class="section-heading"><div><p class="eyebrow">BILLING</p><h2>Invoices</h2></div></div><form class="surface editor" id="invoiceForm"><div class="field-row"><label>Invoice number<input id="invoiceNumber" required maxlength="40"></label><label>Due date<input id="invoiceDueDate" type="date"></label></div><label>Customer name<input id="invoiceCustomer" required maxlength="100"></label><label>Customer email<input id="invoiceEmail" type="email" maxlength="160"></label><label>Description<textarea id="invoiceDescription" rows="2" maxlength="500"></textarea></label><label>Amount (USD)<input id="invoiceAmount" type="number" min="0.01" step="0.01" required></label><button class="gold-button" type="submit">Create draft invoice</button><p class="form-message" id="invoiceMessage"></p></form><div id="invoicesList" class="list-surface"></div><p class="small-note">Internal invoice records only. Sending invoices and collecting payments require a verified provider integration.</p></section>
+<section class="panel" id="panel-addons"><div class="section-heading"><div><p class="eyebrow">BOOKING EXTRAS</p><h2>Service add-ons</h2></div></div><form class="surface editor" id="addonForm"><label>Name<input id="addonName" required maxlength="100"></label><label>Description<input id="addonDescription" maxlength="500"></label><div class="field-row"><label>Price (USD)<input id="addonPrice" type="number" min="0" step="0.01" required></label><label>Extra minutes<input id="addonDuration" type="number" min="0" value="0"></label></div><button class="gold-button" type="submit">Save add-on</button><p class="form-message" id="addonMessage"></p></form><div id="addonsList" class="list-surface"></div><p class="small-note">Add-ons are saved for setup; they are not yet connected to Square checkout.</p></section><section class="panel" id="panel-services">
         <div class="section-heading"><div><p class="eyebrow">TREATMENT MENU</p><h2>Services & prices</h2></div><button class="gold-button" id="addServiceButton">Add service +</button></div>
         <form class="surface editor" id="serviceForm" hidden>
           <input type="hidden" id="serviceId">
