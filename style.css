@@ -1895,3 +1895,14 @@ body[data-theme="light"] .theme-option.is-active {
 .approved-review{max-width:720px;margin:18px auto;padding:24px;background:rgba(20,19,16,.65);border:1px solid rgba(201,169,119,.2);color:#f4efe6}
 .approved-review .stars{color:#d7b77e;letter-spacing:.15em}
 .approved-review p{line-height:1.7}
+
+
+/* WhatsApp quick contact and AI concierge chat */
+.nova-whatsapp-float{position:fixed;right:22px;bottom:22px;z-index:900;display:flex;align-items:center;gap:9px;padding:13px 18px;border:1px solid rgba(201,169,119,.55);border-radius:999px;background:#171a16;color:#f4efe6;text-decoration:none;box-shadow:0 12px 35px #0007;font-size:12px;letter-spacing:.04em}
+.nova-whatsapp-float span:first-child{font-size:19px;color:#9bc99c}
+.nova-chat-form{display:flex;gap:8px;margin:14px 0}
+.nova-chat-form input{min-width:0;flex:1;padding:12px;border:1px solid rgba(201,169,119,.4);background:#171611;color:#fff}
+.nova-chat-form button{padding:0 16px;border:0;background:#c9a977;color:#17140f;font-weight:700}
+.concierge-disclaimer{display:block;font-size:10px;line-height:1.5;color:#b9b0a2}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){.nova-whatsapp-float{right:14px;bottom:14px;padding:11px 14px}.nova-whatsapp-float span:last-child{font-size:11px}}
