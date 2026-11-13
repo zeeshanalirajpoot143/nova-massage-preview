@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#11110f">
+  <title>NOVA MASSAGE | Admin</title>
+  <link rel="icon" type="image/svg+xml" href="nova-favicon.svg">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">NOVA <span>MASSAGE</span></a>
+      <span class="secure-label">PRIVATE ADMIN AREA</span>
+    </header>
+
+    <section class="login-card" id="loginView">
+      <p class="eyebrow">NOVA MASSAGE</p>
+      <h1>Welcome back.</h1>
+      <p class="muted">Sign in to manage your website.</p>
+      <form id="loginForm">
+        <label for="adminPassword">Admin password</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required>
+        <button class="gold-button" type="submit">Sign in securely</button>
+        <p class="form-message" id="loginMessage" role="status"></p>
+      </form>
+    </section>
+
+    <section id="dashboardView" hidden>
+      <div class="welcome-row">
+        <div><p class="eyebrow">CONTROL CENTER</p><h1>Good to see you.</h1><p class="muted">Manage your website in one place.</p></div>
+        <button class="outline-button" id="logoutButton">Sign out</button>
+      </div>
+      <nav class="tabs" aria-label="Admin sections">
+        <button class="tab active" data-panel="overview">Overview</button>
+        <button class="tab" data-panel="appointments">Appointments</button>
+        <button class="tab" data-panel="services">Services & prices</button>
+        <button class="tab" data-panel="reviews">Reviews</button>
+        <button class="tab" data-panel="settings">Website settings</button>
+      </nav>
+
+      <section class="panel active" id="panel-overview">
+        <div class="stats">
+          <article class="stat"><span>Active services</span><strong id="serviceCount">—</strong></article>
+          <article class="stat"><span>Pending reviews</span><strong id="pendingCount">—</strong></article>
+          <article class="stat"><span>Published reviews</span><strong id="publishedCount">—</strong></article>
+        </div>
+        <article class="surface">
+          <p class="eyebrow">BOOKING PLATFORM</p><h2>Appointments are handled by Square</h2>
+          <p class="muted">Customers book, cancel or reschedule through the existing NOVA MASSAGE Square booking page. Square remains the source of truth for availability, confirmations and reminders.</p>
+          <a class="gold-button inline-button" href="https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services" target="_blank" rel="noopener noreferrer">Open Square booking page ↗</a>
+        </article>
+        <p class="notice" id="setupNotice"></p>
+      </section>
+
+      <section class="panel" id="panel-appointments">
+        <article class="surface">
+          <p class="eyebrow">SQUARE APPOINTMENTS</p><h2>Manage bookings in Square</h2>
+          <p class="muted">The Square booking system manages appointment slots, customer booking details, confirmations, cancellations, rescheduling and reminder settings. Use Square's secure dashboard for private customer and payment information.</p>
+          <a class="gold-button inline-button" href="https://squareup.com/dashboard" target="_blank" rel="noopener noreferrer">Open Square Dashboard ↗</a>
+          <p class="small-note">This admin panel does not store card details or duplicate Square's appointment records.</p>
+        </article>
+      </section>
+
+      <section class="panel" id="panel-services">
+        <div class="section-heading"><div><p class="eyebrow">TREATMENT MENU</p><h2>Services & prices</h2></div><button class="gold-button" id="addServiceButton">Add service +</button></div>
+        <form class="surface editor" id="serviceForm" hidden>
+          <input type="hidden" id="serviceId">
+          <label>Service name<input id="serviceName" required maxlength="100"></label>
+          <label>Description<textarea id="serviceDescription" rows="3" maxlength="500"></textarea></label>
+          <div class="field-row"><label>Price (USD)<input id="servicePrice" type="number" min="0" step="0.01" required></label><label>Duration (minutes)<input id="serviceDuration" type="number" min="1" step="5" value="60" required></label></div>
+          <label class="check"><input id="serviceActive" type="checkbox" checked> Visible on website</label>
+          <div class="actions"><button class="gold-button" type="submit">Save service</button><button class="outline-button" type="button" id="cancelService">Cancel</button></div>
+          <p class="form-message" id="serviceMessage" role="status"></p>
+        </form>
+        <div id="servicesList" class="list-surface"><p class="muted">Loading services…</p></div>
+      </section>
+
+      <section class="panel" id="panel-reviews">
+        <div class="section-heading"><div><p class="eyebrow">CUSTOMER FEEDBACK</p><h2>Review moderation</h2></div></div>
+        <div id="reviewsList" class="list-surface"><p class="muted">Loading reviews…</p></div>
+      </section>
+
+      <section class="panel" id="panel-settings">
+        <article class="surface">
+          <p class="eyebrow">WEBSITE & SECURITY</p><h2>Connected services</h2>
+          <ul class="settings-list">
+            <li><span>Square booking</span><strong>Existing booking link</strong></li>
+            <li><span>Admin authentication</span><strong>Cloudflare Worker session</strong></li>
+            <li><span>Website content database</span><strong id="databaseStatus">Checking…</strong></li>
+            <li><span>Email notifications</span><strong>Provider setup required</strong></li>
+          </ul>
+          <p class="small-note">Customer payment data stays with Square. Admin access must be protected by the Cloudflare environment secrets and database binding before this panel is put into production.</p>
+        </article>
+      </section>
+    </section>
+    <footer>© <span id="year"></span> NOVA MASSAGE · Secure management</footer>
+  </main>
+  <script src="admin.js"></script>
+</body>
+</html>
