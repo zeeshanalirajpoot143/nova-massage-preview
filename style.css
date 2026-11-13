@@ -2002,3 +2002,42 @@ body[data-theme="light"] .service-card.image-card .service-content p{color:#5c53
 @media(max-width:900px){.cards-grid.three-cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
 @media(max-width:600px){.cards-grid.three-cols{grid-template-columns:1fr;gap:18px}.service-card.image-card>img{height:235px}.service-card.image-card .service-content{padding:22px}}
 @media(prefers-reduced-motion:reduce){.service-card.image-card,.service-card.image-card .checkout-add-button,.service-card.image-card .checkout-add-button:before{animation:none!important;transition:none!important}}
+
+/* NOVA TIP SELECTOR */
+.checkout-tip{margin:20px 0 18px;padding:18px;border:1px solid rgba(201,169,119,.28);background:rgba(201,169,119,.045)}
+.checkout-tip-heading{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.checkout-tip-heading span{font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--nova-gold-light)}
+.checkout-tip-heading small,.tip-note{font-size:10px;line-height:1.6;color:#b9b0a2}
+.tip-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tip-option{min-height:42px;padding:8px 4px;border:1px solid rgba(201,169,119,.48);background:transparent;color:var(--nova-gold-light);font:600 10px "DM Sans",sans-serif;cursor:pointer;transition:transform .22s,background .22s,box-shadow .22s}
+.tip-option:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(201,169,119,.15)}
+.tip-option.is-active{background:linear-gradient(120deg,#ead9b8,#c9a977,#9d7947);border-color:#ead9b8;color:#17130d;box-shadow:0 5px 18px rgba(201,169,119,.18)}
+.custom-tip-field{display:block;margin-top:12px;color:var(--nova-gold-light);font-size:10px}
+.custom-tip-field[hidden]{display:none}
+.custom-tip-field input{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid rgba(201,169,119,.42);background:rgba(0,0,0,.18);color:var(--text);font:inherit}
+.checkout-tip-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid rgba(201,169,119,.16);color:#c7bba8;font-size:11px}
+.checkout-tip-row strong{color:var(--nova-gold-light);font-weight:600}
+.checkout-grand-total{font-size:12px;color:var(--nova-gold-light)}
+.checkout-grand-total strong{font:400 22px Georgia,serif}
+.tip-note{margin:10px 0 0}
+body[data-theme="light"] .checkout-tip{background:#f4eddf}
+body[data-theme="light"] .checkout-tip-heading span,body[data-theme="light"] .custom-tip-field,body[data-theme="light"] .checkout-tip-row strong{color:var(--nova-gold-deep)}
+body[data-theme="light"] .tip-options .tip-option{color:var(--nova-gold-deep);border-color:rgba(157,121,71,.45)}
+body[data-theme="light"] .tip-options .tip-option.is-active{color:#17130d}
+body[data-theme="light"] .custom-tip-field input{background:#fffdf8;color:#292319}
+body[data-theme="light"] .checkout-tip-row{color:#625744}
+body[data-theme="light"] .tip-note,body[data-theme="light"] .checkout-tip-heading small{color:#6d604c}
+
+/* NOVA SIGNATURE AI CONCIERGE LAUNCHER — Creative ZAAR-inspired pill and glow */
+.concierge{right:24px;bottom:24px}
+.concierge-toggle{position:relative;isolation:isolate;overflow:visible;min-height:58px;padding:0 22px 0 17px;gap:11px;border:1px solid rgba(234,217,184,.78);border-radius:999px;color:#17130d;background:linear-gradient(112deg,#f1dfbd 0%,#c9a977 48%,#9d7947 100%);box-shadow:0 10px 34px rgba(0,0,0,.34),0 0 24px rgba(201,169,119,.22);font:700 10px "DM Sans",sans-serif;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:transform .28s,box-shadow .28s,filter .28s}
+.concierge-toggle:before{content:"";position:absolute;inset:-5px;border:1px solid rgba(201,169,119,.32);border-radius:inherit;z-index:-1;animation:novaAssistantHalo 3.2s ease-in-out infinite}
+.concierge-toggle:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.36) 48%,transparent 72%);transform:translateX(-130%);transition:transform .75s;pointer-events:none}
+.concierge-toggle:hover{transform:translateY(-4px);filter:brightness(1.06);box-shadow:0 15px 40px rgba(0,0,0,.38),0 0 32px rgba(201,169,119,.34)}
+.concierge-toggle:hover:after{transform:translateX(130%)}
+.concierge-toggle-icon{display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(23,19,13,.42);border-radius:50%;font-size:16px;line-height:1;animation:novaAssistantSpark 5s linear infinite}
+.concierge-toggle span:last-child{position:relative;z-index:1}
+@keyframes novaAssistantHalo{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.055);opacity:.9}}
+@keyframes novaAssistantSpark{0%,85%,100%{transform:rotate(0) scale(1)}92%{transform:rotate(45deg) scale(1.12)}}
+@media(max-width:600px){.concierge{right:14px;bottom:14px}.concierge-toggle{min-height:52px;padding:0 17px 0 13px}}
+@media(prefers-reduced-motion:reduce){.concierge-toggle:before,.concierge-toggle-icon{animation:none!important}.concierge-toggle:after{display:none}}
