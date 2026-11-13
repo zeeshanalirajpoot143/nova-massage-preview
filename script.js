@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Build an Explore Now-style service gallery from the actual published service cards.
   const checkoutServiceGrid = document.getElementById("checkoutServiceGrid");
   if (checkoutServiceGrid) {
-    document.querySelectorAll("#wellness .service-card").forEach((sourceCard, index) => {
+    document.querySelectorAll("#wellness .service-card, #popular .service-card").forEach((sourceCard, index) => {
       const clone = sourceCard.cloneNode(true);
       clone.classList.add("checkout-service-card");
       clone.removeAttribute("id");
