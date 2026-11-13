@@ -8,5 +8,8 @@
     "directory": "./",
     "binding": "ASSETS"
   },
-  "previews": {}
+  "previews": {},
+  "ai": {
+    "binding": "AI"
+  }
 }
