@@ -30,6 +30,7 @@
         <div class="nav-links" aria-label="Page sections">
           <a href="#about">Our Story</a>
           <a href="#wellness">Services</a>
+          <a href="#checkout">Checkout</a>
           <a href="#reviews">Reviews</a>
           <a href="#gallery">Gallery</a>
           <a href="#faq">FAQ</a>
@@ -862,7 +863,30 @@
 
 
 
-    <section class="section gallery-section" id="gallery">
+    <section class="section checkout-section" id="checkout">
+  <div class="container">
+    <div class="section-kicker">YOUR NOVA EXPERIENCE</div>
+    <h2>Service Selection &amp; Checkout</h2>
+    <p class="section-intro">Choose the treatments you would like to enjoy. Review your selection and continue securely to NOVA MASSAGE booking.</p>
+    <div class="checkout-layout">
+      <div class="checkout-picker">
+        <h3>Choose your services</h3>
+        <p class="checkout-hint">Use “Add to selection” on any treatment card, or browse the services above.</p>
+        <a class="checkout-browse-link" href="#wellness">Browse all massage services ↓</a>
+      </div>
+      <aside class="checkout-summary" aria-live="polite">
+        <div class="checkout-summary-head"><span>YOUR SELECTION</span><span id="checkoutCount">0 items</span></div>
+        <div id="checkoutItems" class="checkout-items"><p class="checkout-empty">Your selection is empty. Add a service to get started.</p></div>
+        <div class="checkout-total"><span>Estimated subtotal</span><strong id="checkoutSubtotal">$0.00</strong></div>
+        <p class="checkout-disclaimer">Final availability, appointment time, applicable taxes, tips and payment options are confirmed securely through Square.</p>
+        <a class="checkout-action is-disabled" id="checkoutContinue" href="https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services" aria-disabled="true">Continue to Square booking</a>
+        <button type="button" class="checkout-clear" id="checkoutClear">Clear selection</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section gallery-section" id="gallery">
       <div class="container">
         <div class="section-kicker">A MOMENT TO YOURSELF</div>
         <div class="gallery-heading-row">
