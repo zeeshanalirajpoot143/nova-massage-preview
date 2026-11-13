@@ -1803,3 +1803,83 @@ p{line-height:1.8}
 @media(max-width:1050px){.main-nav{position:relative;flex-wrap:wrap;justify-content:center;gap:12px 22px;background:rgba(13,13,11,.86)}.nav-links{order:3;width:100%;justify-content:center;flex-wrap:wrap}.hero-copy{padding-top:clamp(90px,14vh,150px)}.hero-orbit{right:3%;opacity:.55}.service-content{min-height:340px}}
 @media(max-width:760px){.container{width:calc(100% - 36px)}.site-header,.header-media{min-height:100svh}.main-nav{min-height:auto;padding:13px 14px;gap:10px 14px}.brand{font-size:24px}.nav-links{gap:10px 15px}.nav-links a{font-size:9px}.theme-option{min-height:29px;padding:0 10px;font-size:9px}.hero-copy{width:calc(100% - 40px);padding:clamp(95px,15vh,145px) 0 120px}.hero-copy h1{max-width:560px;font-size:clamp(54px,13vw,78px)}.hero-copy p{font-size:14px}.hero-eyebrow{font-size:8px;letter-spacing:.16em}.hero-orbit{width:230px;right:-75px;top:38%;opacity:.25}.hero-orbit-two{display:none}.hero-scroll-cue{bottom:35px}.about-grid,.faq-layout{grid-template-columns:1fr}.about-image-wrap{transform:none;box-shadow:12px 12px 0 var(--gold-glow)}.gallery-heading-row{align-items:flex-start;flex-direction:column}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:230px 180px}.gallery-tile-tall{grid-row:span 2}.gallery-tile figcaption{left:14px;right:12px;bottom:15px}.gallery-tile figcaption strong{font-size:23px}.ritual-panel{flex-direction:column;align-items:flex-start}.ritual-orb{position:absolute;width:160px;right:-42px;bottom:-38px;opacity:.45}.service-content{min-height:0}.concierge{right:14px;bottom:14px}}
 @media(max-width:520px){h2{font-size:42px!important}.hero-action{gap:17px}.hero-copy .primary-button{min-height:52px;padding:0 20px;font-size:9px}.hero-text-link{font-size:9px}.gallery-grid{display:grid;grid-template-columns:1fr;grid-template-rows:240px 190px 190px}.gallery-tile-tall{grid-row:auto}.service-filters{gap:6px}.filter-chip{padding:0 11px;font-size:9px}.faq-item summary{font-size:22px}.concierge-toggle{min-height:48px;padding:0 16px}}
+
+
+/* NOVA refinement — persistent dark hero, shorter first screen, premium motion */
+.site-header,
+.header-media {
+  min-height: clamp(680px, 86svh, 840px);
+}
+.hero-copy {
+  padding-top: clamp(165px, 19vh, 220px);
+  padding-bottom: 100px;
+}
+body[data-theme="light"] .site-header,
+body[data-theme="light"] .header-media {
+  color: #f8f2e8;
+  background: #0d0d0b;
+}
+body[data-theme="light"] .main-nav {
+  color: #f8f2e8;
+  background: rgba(13,13,11,.72);
+  border-bottom-color: rgba(201,169,119,.24);
+}
+body[data-theme="light"] .main-nav .brand,
+body[data-theme="light"] .main-nav .nav-links a,
+body[data-theme="light"] .main-nav .theme-option,
+body[data-theme="light"] .hero-phone,
+body[data-theme="light"] .hero-text-link {
+  color: #f1e2c7;
+}
+body[data-theme="light"] .theme-option.is-active {
+  color: #1a1711;
+  background: linear-gradient(135deg,#e8d6b5,#b28d58);
+}
+.header-video {
+  animation: nova-hero-drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes nova-hero-drift {
+  from { transform: scale(1.035) translate3d(-.35%,0,0); }
+  to { transform: scale(1.105) translate3d(.45%,-.35%,0); }
+}
+.hero-copy {
+  animation: nova-hero-arrive 1.15s var(--ease-lux) both;
+}
+@keyframes nova-hero-arrive {
+  from { opacity: 0; transform: translate3d(0,22px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+.service-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+.service-card img {
+  transform: translateZ(18px) scale(1.001);
+}
+.service-content {
+  transform: translateZ(12px);
+}
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.filter-chip:focus-visible,
+.concierge-toggle:focus-visible,
+.concierge-questions button:focus-visible {
+  outline: 2px solid var(--champagne-light);
+  outline-offset: 4px;
+}
+@media (max-width: 760px) {
+  .site-header,
+  .header-media {
+    min-height: max(690px, 92svh);
+  }
+  .hero-copy {
+    padding-top: clamp(150px, 18svh, 185px);
+    padding-bottom: 100px;
+  }
+  .hero-orbit-one { opacity: .22; right: -90px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-video,
+  .hero-copy { animation: none !important; }
+}
