@@ -27,6 +27,6 @@
 - Email notifications for contact enquiries are currently delivered through the existing FormSubmit configuration. Appointment notifications come from Square according to the merchant's notification settings.
 - The services editor stores service records in D1. Before replacing the existing live service cards with database-driven cards, map each existing service to its approved image and Square booking URL to avoid losing accurate treatment details or booking destinations.
 
-7. To enable the 24/7 AI Concierge, add a Workers AI binding named exactly `AI` to the Worker. The assistant endpoint uses Cloudflare Workers AI model `@cf/meta/llama-3.1-8b-instruct`. Test the endpoint and review its answers before production.
+7. To enable the 24/7 AI Concierge, add a Workers AI binding named exactly `AI` to the Worker. The assistant endpoint uses Cloudflare Workers AI model `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. Test the endpoint and review its answers before production.
 8. The WhatsApp quick-contact button currently opens the existing studio phone number in WhatsApp. Confirm the number is registered with WhatsApp Business before launch.
 9. Payment gateway expansion: Square remains the current booking destination. Do not display PayPal, Venmo, or card payment badges as enabled until the merchant account and a real payment/checkout flow have been configured and tested. Never store card details in this website.
