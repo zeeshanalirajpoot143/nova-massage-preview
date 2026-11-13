@@ -2089,9 +2089,16 @@ body[data-theme="light"] .tip-note,body[data-theme="light"] .checkout-tip-headin
 .checkout-service-card{transform-style:preserve-3d}
 .checkout-service-card:hover{transform:perspective(1000px) rotateX(1.5deg) rotateY(-1.5deg) translateY(-5px)}
 /* Keep the concierge button clean: no pale shine overlay or white halo. */
-.concierge-toggle{box-shadow:0 5px 18px rgba(157,121,71,.18)!important}
-.concierge-toggle:after{background:linear-gradient(110deg,transparent 20%,rgba(157,121,71,.12) 48%,transparent 72%)!important}
-.concierge-toggle:hover{box-shadow:0 8px 22px rgba(157,121,71,.24)!important}
+.concierge-toggle{box-shadow:0 5px 16px rgba(0,0,0,.2)!important}
+.concierge-toggle:before{display:none!important}
+.concierge-toggle:after{background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.12) 48%,transparent 72%)!important}
+.concierge-toggle:hover{box-shadow:0 7px 18px rgba(0,0,0,.24)!important}
+.services-explore-now{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;margin:10px 0 24px;padding:0 25px;border:1px solid rgba(234,217,184,.72);border-radius:999px;background:linear-gradient(115deg,#ead9b8,#c9a977 58%,#a98552);color:#17130d;font:700 10px "DM Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .3s,box-shadow .3s,filter .3s}
+.services-explore-now span{font-size:15px;transition:transform .3s}
+.services-explore-now:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.2);filter:brightness(1.04)}
+.services-explore-now:hover span{transform:translate(3px,-3px)}
+body[data-theme="light"] .services-explore-now{color:#17130d}
+@media(max-width:520px){.services-explore-now{min-height:44px;padding:0 21px;margin-bottom:18px}}
 @media(prefers-reduced-motion:reduce){
   :where(button,a,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip){transition:none!important}
   .cards-grid>.service-card{will-change:auto}
