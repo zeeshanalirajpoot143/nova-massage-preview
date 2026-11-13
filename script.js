@@ -734,6 +734,18 @@ document.addEventListener("DOMContentLoaded", function () {
     } finally { if (submit) submit.disabled = false; }
   });
 
+  // FREE CALLBACK REQUEST: stored in the NOVA admin dashboard; no SMS/call automation.
+  const callbackRequestForm = document.getElementById("callbackRequestForm");
+  if (callbackRequestForm) callbackRequestForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const submit=document.getElementById("callbackSubmit"),status=document.getElementById("callbackStatus");
+    const payload={customer_name:document.getElementById("callbackName").value.trim(),customer_phone:document.getElementById("callbackPhone").value.trim(),customer_email:document.getElementById("callbackEmail").value.trim(),message:document.getElementById("callbackMessage").value.trim(),website:callbackRequestForm.querySelector('[name="website"]').value};
+    if(submit)submit.disabled=true;if(status)status.textContent="Sending your callback request…";
+    try{const response=await fetch("/api/callback-request",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const result=await response.json();if(!response.ok)throw new Error(result.error||"Unable to send your request.");callbackRequestForm.reset();if(status)status.textContent="Your request has been saved. The studio will follow up when available. For urgent help, call or WhatsApp +1 (708) 400-9333."}
+    catch(error){if(status)status.textContent=error.message+" You can also WhatsApp the studio."}
+    finally{if(submit)submit.disabled=false}
+  });
+
   // SCROLL REVEALS
   const revealTargets = document.querySelectorAll("main > section,.about-grid,.cards-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section,.service-tools,.service-search-wrap,.service-filters,.filter-chip,.checkout-picker,.checkout-summary,.checkout-step-heading,.checkout-step-note,.checkout-service-card,.checkout-line,.appointment-request-form");
   revealTargets.forEach((element, index) => {
