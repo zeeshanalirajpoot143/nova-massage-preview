@@ -574,7 +574,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (searchInput) searchInput.addEventListener("input", filterServices);
 
   // SCROLL REVEALS
-  const revealTargets = document.querySelectorAll(".about-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section");
+  const revealTargets = document.querySelectorAll("main > section,.about-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section");
   revealTargets.forEach((element, index) => {
     element.classList.add("js-reveal");
     element.style.transitionDelay = (index % 3) * 70 + "ms";
