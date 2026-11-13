@@ -1963,6 +1963,40 @@ body[data-theme="light"] .checkout-picker,body[data-theme="light"] .checkout-sum
 body[data-theme="light"] .checkout-picker h3,body[data-theme="light"] .checkout-summary-head,body[data-theme="light"] .checkout-line span,body[data-theme="light"] .checkout-total strong,body[data-theme="light"] .checkout-browse-link,body[data-theme="light"] .checkout-line button,body[data-theme="light"] .checkout-clear{color:var(--nova-gold-deep)}
 body[data-theme="light"] .checkout-hint,body[data-theme="light"] .checkout-disclaimer,body[data-theme="light"] .checkout-empty,body[data-theme="light"] .checkout-total{color:#625744}
 @media(max-width:760px){.checkout-layout{grid-template-columns:1fr}.checkout-picker,.checkout-summary{padding:20px}}
+/* EXPLORE-NOW STYLE BOOKING GALLERY */
+.checkout-step-heading,.checkout-step-note{display:flex;align-items:center;gap:14px;margin:24px 0 16px;padding:15px 17px;border:1px solid rgba(201,169,119,.28);background:linear-gradient(110deg,rgba(201,169,119,.12),rgba(201,169,119,.025))}
+.checkout-step-heading>span,.checkout-step-note>span{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border:1px solid rgba(201,169,119,.7);border-radius:50%;color:var(--nova-gold-light);font:16px Georgia,serif}
+.checkout-step-heading strong,.checkout-step-note strong{display:block;color:var(--nova-gold-light);font:400 19px Georgia,serif}
+.checkout-step-heading small,.checkout-step-note small{display:block;margin-top:4px;color:#c7bba8;font-size:11px;line-height:1.5}
+.checkout-service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
+.checkout-service-card{display:flex!important;flex-direction:column;height:100%;min-width:0;overflow:hidden;border:1px solid rgba(201,169,119,.3);background:rgba(12,11,9,.58);transition:transform .35s,border-color .35s,box-shadow .35s}
+.checkout-service-card:hover{transform:translateY(-5px);border-color:rgba(234,217,184,.75);box-shadow:0 16px 38px rgba(0,0,0,.22)}
+.checkout-service-card>img{width:100%;height:clamp(130px,16vw,190px);object-fit:cover}
+.checkout-service-card .service-content{display:flex;flex:1;flex-direction:column;padding:16px!important}
+.checkout-service-card .service-content h4{min-height:2.5em;margin:0;color:var(--nova-gold-light);font:400 19px/1.3 Georgia,serif}
+.checkout-service-card .service-meta{margin:8px 0;color:var(--nova-gold-light);font-size:11px}
+.checkout-service-card .service-content>p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 14px;color:#d1c6b5;font-size:11px;line-height:1.65}
+.checkout-service-card .checkout-add-button{margin-top:auto!important;min-height:42px!important;width:100%;font-size:10px}
+.checkout-picker .checkout-browse-link{margin-bottom:8px}
+.checkout-summary{position:sticky;top:105px}
+.checkout-tip{margin-top:16px;padding:18px;border:1px solid rgba(201,169,119,.28);background:rgba(201,169,119,.055)}
+.checkout-tip-heading span{display:block;color:var(--nova-gold-light);font-size:11px;letter-spacing:.16em}
+.checkout-tip-heading small{display:block;margin-top:5px;color:#c7bba8;font-size:10px}
+.tip-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.tip-option{min-height:39px;border:1px solid rgba(201,169,119,.4);background:transparent;color:var(--nova-gold-light);font-size:11px;cursor:pointer;transition:background .25s,border-color .25s}
+.tip-option.is-active{background:linear-gradient(120deg,#ead9b8,#c9a977);border-color:#ead9b8;color:#17130d}
+.checkout-tip-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;color:#c7bba8;font-size:11px}
+.checkout-tip-row strong{color:var(--nova-gold-light)}
+.checkout-grand-total{margin-top:4px;padding-top:14px;border-top:1px solid rgba(201,169,119,.3);font-size:13px}
+.checkout-grand-total strong{font:400 23px Georgia,serif}
+.tip-note{margin:10px 0 0;color:#a99d8a;font-size:10px;line-height:1.6}
+body[data-theme="light"] .checkout-step-heading small,body[data-theme="light"] .checkout-step-note small,body[data-theme="light"] .checkout-service-card .service-content>p,body[data-theme="light"] .checkout-tip-heading small,body[data-theme="light"] .checkout-tip-row,body[data-theme="light"] .tip-note{color:#625744}
+body[data-theme="light"] .checkout-service-card{background:#fffdf8}
+body[data-theme="light"] .checkout-service-card .service-content h4{color:var(--nova-gold-deep)}
+@media(max-width:760px){.checkout-service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.checkout-summary{position:static}}
+@media(max-width:440px){.checkout-service-grid{grid-template-columns:1fr}.checkout-service-card>img{height:190px}}
+@media(prefers-reduced-motion:reduce){.checkout-service-card,.tip-option{transition:none}}
+
 
 /* NOVA APPOINTMENT REQUEST PREMIUM FORM */
 .appointment-request-form{margin-top:28px;padding:26px;border:1px solid rgba(201,169,119,.38);background:rgba(15,14,11,.78);color:#f4efe6}
