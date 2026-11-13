@@ -648,6 +648,57 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   renderCheckout();
 
+  // NOVA APPOINTMENT REQUEST FORM
+  const appointmentRequestForm = document.getElementById("appointmentRequestForm");
+  const appointmentRequestDate = document.getElementById("appointmentRequestDate");
+  const appointmentRequestStatus = document.getElementById("appointmentRequestStatus");
+  const appointmentRequestServices = document.getElementById("appointmentRequestServices");
+  if (appointmentRequestDate) {
+    const todayLocal = new Date();
+    const localDate = new Date(todayLocal.getTime() - todayLocal.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+    appointmentRequestDate.min = localDate;
+  }
+  if (appointmentRequestForm) appointmentRequestForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const chosen = Array.from(selectedServices.values());
+    if (!chosen.length) {
+      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Please add at least one service above before requesting an appointment.";
+      document.getElementById("checkout")?.scrollIntoView({behavior:"smooth"});
+      return;
+    }
+    const date = document.getElementById("appointmentRequestDate").value;
+    const time = document.getElementById("appointmentRequestTime").value;
+    const preferred = new Date(date + "T" + time);
+    if (!date || !time || Number.isNaN(preferred.getTime()) || preferred.getTime() <= Date.now()) {
+      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Please choose a future date and time.";
+      return;
+    }
+    const payload = {
+      customer_name: document.getElementById("appointmentRequestName").value.trim(),
+      customer_email: document.getElementById("appointmentRequestEmail").value.trim(),
+      customer_phone: document.getElementById("appointmentRequestPhone").value.trim(),
+      appointment_at: date + "T" + time,
+      service_name: chosen.map(item => item.name).join(", ").slice(0,500),
+      notes: document.getElementById("appointmentRequestNotes").value.trim()
+    };
+    if (appointmentRequestServices) appointmentRequestServices.value = payload.service_name;
+    const submit = document.getElementById("appointmentRequestSubmit");
+    if (submit) submit.disabled = true;
+    if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Sending your request…";
+    try {
+      const response = await fetch("/api/appointment-request", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Unable to send appointment request.");
+      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Your preferred appointment request has been received. It is not confirmed yet. Please call or WhatsApp +1 (708) 400-9333, or complete booking through Square.";
+      appointmentRequestForm.reset();
+      selectedServices.clear();
+      document.querySelectorAll("[data-checkout-add]").forEach(button => {button.textContent="Add to selection";button.classList.remove("is-added");});
+      renderCheckout();
+    } catch (error) {
+      if (appointmentRequestStatus) appointmentRequestStatus.textContent = error.message + " Please call +1 (708) 400-9333.";
+    } finally { if (submit) submit.disabled = false; }
+  });
+
   // SCROLL REVEALS
   const revealTargets = document.querySelectorAll("main > section,.about-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section");
   revealTargets.forEach((element, index) => {
