@@ -612,13 +612,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const title = card.querySelector("h4")?.textContent?.trim() || "Massage service";
     const priceText = content.textContent.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
     const price = priceText ? Number(priceText[1].replace(/,/g, "")) : 0;
-    const bookingUrl = card.querySelector('a[href*="book.squareup.com"]')?.href || squareLocationUrl;
-    const id = "nova-service-" + index;
+    const bookingUrl = card.querySelector("[data-square-url]")?.dataset.squareUrl || squareLocationUrl;
+    const id = card.dataset.serviceId || ("nova-service-" + index);
     if (!price) return;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "secondary-button checkout-add-button";
     button.dataset.checkoutAdd = id;
+    button.id = "add-service-" + id;
     button.textContent = "Add to selection";
     button.addEventListener("click", () => {
       if (selectedServices.has(id)) {
