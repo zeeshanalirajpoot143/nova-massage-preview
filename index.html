@@ -909,11 +909,21 @@
             What Our Clients Say
           </h2>
 
-          <div
-            class="reviews-empty"
-            aria-label="Reviews"
-          >
-            <div class="reviews-placeholder"><span class="review-mark" aria-hidden="true">“</span><p>We believe the best measure of a massage is how you feel when you leave. Verified client feedback will be featured here.</p><span class="review-note">REAL EXPERIENCES · SHARED WITH PERMISSION</span></div>
+          <div id="approvedReviews" class="reviews-empty" aria-live="polite" aria-label="Customer reviews">
+            <div class="reviews-placeholder"><span class="review-mark" aria-hidden="true">“</span><p>We believe the best measure of a massage is how you feel when you leave. Be the first to share your experience.</p><span class="review-note">REAL EXPERIENCES · SHARED WITH PERMISSION</span></div>
+          </div>
+          <div class="review-submit">
+            <h3>Share Your Experience</h3>
+            <form id="customerReviewForm">
+              <label for="reviewName">Your name</label>
+              <input id="reviewName" name="customer_name" maxlength="80" required>
+              <label for="reviewRating">Your rating</label>
+              <select id="reviewRating" name="rating" required><option value="">Choose a rating</option><option value="5">★★★★★ — Excellent</option><option value="4">★★★★ — Very good</option><option value="3">★★★ — Good</option><option value="2">★★ — Fair</option><option value="1">★ — Poor</option></select>
+              <label for="reviewText">Your review</label>
+              <textarea id="reviewText" name="review_text" rows="4" minlength="10" maxlength="1200" required></textarea>
+              <button class="gold-button" type="submit">Submit review</button>
+              <p id="reviewFormStatus" role="status" aria-live="polite"></p>
+            </form>
           </div>
 
         </div>
