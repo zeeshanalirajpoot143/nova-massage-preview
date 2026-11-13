@@ -1781,7 +1781,7 @@ p{line-height:1.8}
 .footer-brand{font-family:"Cormorant Garamond",serif;font-size:26px}
 /* Guided FAQ concierge — static, transparent, not a live AI claim */
 .concierge{position:fixed;z-index:1000;right:24px;bottom:24px;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
-.concierge-toggle{display:flex;align-items:center;gap:10px;min-height:54px;padding:0 20px;border:1px solid rgba(232,214,181,.55);border-radius:999px;color:#17140f;background:linear-gradient(120deg,#e8d6b5,#b38c55);box-shadow:0 12px 36px rgba(0,0,0,.28);font:700 10px "DM Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.concierge-toggle{display:flex;align-items:center;gap:10px;min-height:54px;padding:0 20px;border:1px solid rgba(232,214,181,.55);border-radius:999px;color:#17140f;background:linear-gradient(120deg,#e8d6b5,#b38c55);box-shadow:0 5px 18px rgba(157,121,71,.18);font:700 10px "DM Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transform:translateZ(0);transition:transform .35s cubic-bezier(.2,.7,.2,1),filter .35s,box-shadow .35s}
 .concierge-toggle-icon{font-size:18px}
 .concierge-panel{width:min(360px,calc(100vw - 32px));padding:22px;border:1px solid var(--border);background:var(--surface);color:var(--text);box-shadow:0 22px 70px rgba(0,0,0,.34)}
 .concierge-panel[hidden]{display:none}
@@ -2067,7 +2067,7 @@ body[data-theme="light"] .tip-note,body[data-theme="light"] .checkout-tip-headin
 .concierge-toggle{position:relative;isolation:isolate;overflow:visible;min-height:58px;padding:0 22px 0 17px;gap:11px;border:1px solid rgba(234,217,184,.78);border-radius:999px;color:#17130d;background:linear-gradient(112deg,#f1dfbd 0%,#c9a977 48%,#9d7947 100%);box-shadow:0 10px 34px rgba(0,0,0,.34),0 0 24px rgba(201,169,119,.22);font:700 10px "DM Sans",sans-serif;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:transform .28s,box-shadow .28s,filter .28s}
 .concierge-toggle:before{content:"";position:absolute;inset:-5px;border:1px solid rgba(201,169,119,.32);border-radius:inherit;z-index:-1;animation:novaAssistantHalo 3.2s ease-in-out infinite}
 .concierge-toggle:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.36) 48%,transparent 72%);transform:translateX(-130%);transition:transform .75s;pointer-events:none}
-.concierge-toggle:hover{transform:translateY(-4px);filter:brightness(1.06);box-shadow:0 15px 40px rgba(0,0,0,.38),0 0 32px rgba(201,169,119,.34)}
+.concierge-toggle:hover{transform:translateY(-3px) scale(1.025);filter:brightness(1.04);box-shadow:0 8px 22px rgba(157,121,71,.24)}
 .concierge-toggle:hover:after{transform:translateX(130%)}
 .concierge-toggle-icon{display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(23,19,13,.42);border-radius:50%;font-size:16px;line-height:1;animation:novaAssistantSpark 5s linear infinite}
 .concierge-toggle span:last-child{position:relative;z-index:1}
@@ -2075,3 +2075,24 @@ body[data-theme="light"] .tip-note,body[data-theme="light"] .checkout-tip-headin
 @keyframes novaAssistantSpark{0%,85%,100%{transform:rotate(0) scale(1)}92%{transform:rotate(45deg) scale(1.12)}}
 @media(max-width:600px){.concierge{right:14px;bottom:14px}.concierge-toggle{min-height:52px;padding:0 17px 0 13px}}
 @media(prefers-reduced-motion:reduce){.concierge-toggle:before,.concierge-toggle-icon{animation:none!important}.concierge-toggle:after{display:none}}
+
+/* SITE-WIDE MICRO-INTERACTIONS + ACCESSIBLE 3D FEEDBACK */
+:where(button,a,input,select,textarea,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip){-webkit-tap-highlight-color:transparent}
+:where(button,a,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip){transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s ease,background-color .28s ease,border-color .28s ease,color .28s ease,filter .28s ease}
+:where(button,a,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip):active{transform:translateY(1px) scale(.975)}
+:where(button,a,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip):focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--nova-gold-light,var(--primary));outline-offset:3px}
+.service-card,.gallery-tile,.ritual-panel,.checkout-picker,.checkout-summary{transform-style:preserve-3d;backface-visibility:hidden}
+.cards-grid>.service-card{will-change:transform,opacity}
+.cards-section .cards-grid{perspective:1200px}
+.cards-section .service-card{transform-origin:center bottom}
+.cards-section .service-card:hover{box-shadow:0 24px 50px rgba(0,0,0,.2),0 0 0 1px rgba(201,169,119,.12)}
+.checkout-service-card{transform-style:preserve-3d}
+.checkout-service-card:hover{transform:perspective(1000px) rotateX(1.5deg) rotateY(-1.5deg) translateY(-5px)}
+/* Keep the concierge button clean: no pale shine overlay or white halo. */
+.concierge-toggle{box-shadow:0 5px 18px rgba(157,121,71,.18)!important}
+.concierge-toggle:after{background:linear-gradient(110deg,transparent 20%,rgba(157,121,71,.12) 48%,transparent 72%)!important}
+.concierge-toggle:hover{box-shadow:0 8px 22px rgba(157,121,71,.24)!important}
+@media(prefers-reduced-motion:reduce){
+  :where(button,a,[role="button"],.primary-button,.secondary-button,.checkout-action,.tip-option,.filter-chip){transition:none!important}
+  .cards-grid>.service-card{will-change:auto}
+}
