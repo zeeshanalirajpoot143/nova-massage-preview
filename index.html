@@ -880,6 +880,24 @@
         <div class="checkout-total"><span>Estimated subtotal</span><strong id="checkoutSubtotal">$0.00</strong></div>
         <p class="checkout-disclaimer">Final availability, appointment time, applicable taxes, tips and payment options are confirmed securely through Square.</p>
         <a class="checkout-action is-disabled" id="checkoutContinue" href="https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services" aria-disabled="true">Continue to Square booking</a>
+        <form class="appointment-request-form" id="appointmentRequestForm">
+          <h3>Request an Appointment</h3>
+          <p class="checkout-hint">Choose your preferred date and time. This is a request only; your appointment is not confirmed until NOVA MASSAGE confirms availability or you complete booking through Square.</p>
+          <label for="appointmentRequestName">Full name</label><input id="appointmentRequestName" name="customer_name" autocomplete="name" maxlength="100" required>
+          <div class="appointment-field-grid">
+            <div><label for="appointmentRequestEmail">Email</label><input id="appointmentRequestEmail" name="customer_email" type="email" autocomplete="email" maxlength="160" required></div>
+            <div><label for="appointmentRequestPhone">Phone</label><input id="appointmentRequestPhone" name="customer_phone" type="tel" autocomplete="tel" maxlength="40" required></div>
+          </div>
+          <div class="appointment-field-grid">
+            <div><label for="appointmentRequestDate">Preferred date</label><input id="appointmentRequestDate" name="appointment_date" type="date" required></div>
+            <div><label for="appointmentRequestTime">Preferred time</label><input id="appointmentRequestTime" name="appointment_time" type="time" required></div>
+          </div>
+          <label for="appointmentRequestNotes">Notes (optional)</label><textarea id="appointmentRequestNotes" name="notes" rows="2" maxlength="500" placeholder="Anything you would like us to know?"></textarea>
+          <input type="hidden" id="appointmentRequestServices" name="services">
+          <button class="checkout-action" type="submit" id="appointmentRequestSubmit">Send appointment request</button>
+          <p class="appointment-request-status" id="appointmentRequestStatus" role="status" aria-live="polite"></p>
+          <a class="appointment-square-link" href="https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services" target="_blank" rel="noopener noreferrer">Or view live availability and book directly with Square ↗</a>
+        </form>
         <button type="button" class="checkout-clear" id="checkoutClear">Clear selection</button>
       </aside>
     </div>
