@@ -630,6 +630,32 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.key === "Escape") setConcierge(false);
   });
 
+
+  // NOVA AI CONCIERGE: uses the Cloudflare Workers AI binding when enabled.
+  const novaChatForm = document.getElementById("novaChatForm");
+  const novaChatInput = document.getElementById("novaChatInput");
+  const novaChatStatus = document.getElementById("novaChatStatus");
+  if (novaChatForm) novaChatForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = (novaChatInput?.value || "").trim();
+    if (!message) return;
+    const submit = novaChatForm.querySelector("button");
+    if (submit) submit.disabled = true;
+    if (novaChatStatus) novaChatStatus.textContent = "Nova is thinking…";
+    if (conciergeAnswer) conciergeAnswer.textContent = "";
+    try {
+      const response = await fetch("/api/assistant", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})});
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "The assistant is temporarily unavailable.");
+      if (conciergeAnswer) conciergeAnswer.textContent = result.reply;
+      novaChatInput.value = "";
+      if (novaChatStatus) novaChatStatus.textContent = "AI concierge · For urgent booking changes, contact the studio directly.";
+    } catch (error) {
+      if (conciergeAnswer) conciergeAnswer.textContent = error.message + " You can reach us on WhatsApp at +1 (708) 400-9333.";
+      if (novaChatStatus) novaChatStatus.textContent = "WhatsApp support is available.";
+    } finally { if (submit) submit.disabled = false; }
+  });
+
   // CUSTOMER REVIEWS: public submissions are queued for admin approval.
   const reviewForm = document.getElementById("customerReviewForm");
   const reviewStatus = document.getElementById("reviewFormStatus");
