@@ -1908,48 +1908,10 @@ body[data-theme="light"] .theme-option.is-active {
 @media(max-width:600px){.nova-whatsapp-float{right:14px;bottom:14px;padding:11px 14px}.nova-whatsapp-float span:last-child{font-size:11px}}
 
 
-/* NOVA: keep the primary navigation fixed while the page scrolls */
-.site-header .main-nav {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 88px;
-}
-html {
-  scroll-padding-top: 104px;
-}
-section[id],
-[id].section-anchor {
-  scroll-margin-top: 104px;
-}
-@media (max-width: 1050px) {
-  .site-header .main-nav {
-    position: fixed !important;
-    min-height: 104px;
-    padding: 12px 18px;
-  }
-  .hero-copy {
-    padding-top: clamp(175px, 22vh, 215px);
-  }
-}
-@media (max-width: 760px) {
-  .site-header .main-nav {
-    min-height: 112px;
-    padding: 10px 14px;
-    gap: 8px 12px;
-  }
-  .hero-copy {
-    padding-top: clamp(175px, 23vh, 205px);
-  }
-  html {
-    scroll-padding-top: 128px;
-  }
-  section[id],
-  [id].section-anchor {
-    scroll-margin-top: 128px;
-  }
-}
+
+/* Global fixed navigation sits outside the hero stacking context */
+.main-nav{position:fixed!important;top:0;left:0;right:0;z-index:100000!important;width:100%;min-height:88px;box-sizing:border-box;background:rgba(13,13,11,.88);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:1px solid rgba(201,169,119,.28);box-shadow:0 8px 28px rgba(0,0,0,.22)}
+html{scroll-padding-top:112px}
+main section[id]{scroll-margin-top:112px}
+@media(max-width:1050px){.main-nav{min-height:104px;padding:12px 18px;flex-wrap:wrap;justify-content:center;gap:12px 22px}.nav-links{order:3;width:100%;justify-content:center;flex-wrap:wrap}.hero-copy{padding-top:clamp(175px,22vh,215px)}}
+@media(max-width:760px){.main-nav{min-height:112px;padding:10px 14px;gap:8px 12px}.hero-copy{padding-top:clamp(175px,23vh,205px)}html{scroll-padding-top:128px}main section[id]{scroll-margin-top:128px}}
