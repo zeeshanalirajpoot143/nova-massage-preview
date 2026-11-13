@@ -3,3 +3,5 @@
 
 /* Status selectors for appointment and invoice management */
 .status-control{display:flex;align-items:center;gap:10px;margin:0;white-space:nowrap;color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase}.status-control select{min-width:132px;padding:10px 30px 10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface2);color:var(--text);font:inherit;letter-spacing:.04em}.status-control select:focus{outline:1px solid var(--gold);border-color:var(--gold)}.status-control select:disabled{opacity:.55;cursor:wait}@media(max-width:650px){.status-control{width:100%;justify-content:space-between}.status-control select{flex:1;max-width:190px}}
+
+.row-actions button:disabled{opacity:.35;cursor:not-allowed}
