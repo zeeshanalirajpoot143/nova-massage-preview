@@ -735,7 +735,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // SCROLL REVEALS
-  const revealTargets = document.querySelectorAll("main > section,.about-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section");
+  const revealTargets = document.querySelectorAll("main > section,.about-grid,.cards-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section,.service-tools,.service-search-wrap,.service-filters,.filter-chip,.checkout-picker,.checkout-summary,.checkout-step-heading,.checkout-step-note,.checkout-service-card,.checkout-line,.appointment-request-form");
   revealTargets.forEach((element, index) => {
     element.classList.add("js-reveal");
     element.style.transitionDelay = (index % 3) * 70 + "ms";
@@ -743,9 +743,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if ("IntersectionObserver" in window) {
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add("is-visible"); } else { entry.target.classList.remove("is-visible"); }
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        } else {
+          entry.target.classList.remove("is-visible");
+        }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08, rootMargin: "0px 0px -35px 0px" });
     revealTargets.forEach(element => revealObserver.observe(element));
   } else {
     revealTargets.forEach(element => element.classList.add("is-visible"));
