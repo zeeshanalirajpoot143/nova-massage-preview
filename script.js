@@ -586,6 +586,21 @@ document.addEventListener("DOMContentLoaded", function () {
   let selectedTip = 20;
   const squareLocationUrl = "https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services";
   const selectedServices = new Map();
+  // Build an Explore Now-style service gallery from the actual published service cards.
+  const checkoutServiceGrid = document.getElementById("checkoutServiceGrid");
+  if (checkoutServiceGrid) {
+    document.querySelectorAll("#wellness .service-card").forEach((sourceCard, index) => {
+      const clone = sourceCard.cloneNode(true);
+      clone.classList.add("checkout-service-card");
+      clone.removeAttribute("id");
+      clone.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+      clone.querySelectorAll("a,button").forEach(node => node.remove());
+      const image = clone.querySelector("img");
+      if (image) { image.loading = "lazy"; image.alt = image.alt || "NOVA massage treatment"; }
+      clone.dataset.checkoutGalleryCard = String(index);
+      checkoutServiceGrid.appendChild(clone);
+    });
+  }
   const formatCheckoutMoney = value => "$" + value.toFixed(2);
   const checkoutEscape = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   function renderCheckout() {
