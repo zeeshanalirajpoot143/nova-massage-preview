@@ -579,6 +579,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const checkoutSubtotal = document.getElementById("checkoutSubtotal");
   const checkoutContinue = document.getElementById("checkoutContinue");
   const checkoutClear = document.getElementById("checkoutClear");
+  const checkoutTipAmount = document.getElementById("checkoutTipAmount");
+  const checkoutGrandTotal = document.getElementById("checkoutGrandTotal");
+  const customTipField = document.getElementById("customTipField");
+  const customTipAmount = document.getElementById("customTipAmount");
+  let selectedTip = 20;
   const squareLocationUrl = "https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services";
   const selectedServices = new Map();
   const formatCheckoutMoney = value => "$" + value.toFixed(2);
@@ -587,6 +592,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!checkoutItems) return;
     const items = Array.from(selectedServices.values());
     const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+    const tipValue = selectedTip === "custom" ? Math.max(0, Number(customTipAmount?.value || 0)) : subtotal * Number(selectedTip) / 100;
+    if (checkoutTipAmount) checkoutTipAmount.textContent = formatCheckoutMoney(tipValue);
+    if (checkoutGrandTotal) checkoutGrandTotal.textContent = formatCheckoutMoney(subtotal + tipValue);
     if (checkoutCount) checkoutCount.textContent = items.length + (items.length === 1 ? " item" : " items");
     if (checkoutSubtotal) checkoutSubtotal.textContent = formatCheckoutMoney(subtotal);
     checkoutItems.innerHTML = items.length ? items.map(item =>
@@ -635,6 +643,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     content.appendChild(button);
   });
+  document.querySelectorAll("[data-tip]").forEach(button => button.addEventListener("click", () => {
+    selectedTip = button.dataset.tip === "custom" ? "custom" : Number(button.dataset.tip);
+    document.querySelectorAll("[data-tip]").forEach(option => option.classList.toggle("is-active", option === button));
+    if (customTipField) customTipField.hidden = selectedTip !== "custom";
+    renderCheckout();
+  }));
+  if (customTipAmount) customTipAmount.addEventListener("input", renderCheckout);
   if (checkoutClear) checkoutClear.addEventListener("click", () => {
     selectedServices.clear();
     document.querySelectorAll("[data-checkout-add]").forEach(button => { button.textContent = "Add to selection"; button.classList.remove("is-added"); });
