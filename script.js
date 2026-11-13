@@ -630,4 +630,44 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.key === "Escape") setConcierge(false);
   });
 
+  // CUSTOMER REVIEWS: public submissions are queued for admin approval.
+  const reviewForm = document.getElementById("customerReviewForm");
+  const reviewStatus = document.getElementById("reviewFormStatus");
+  const approvedReviews = document.getElementById("approvedReviews");
+  function escapeReview(value) {
+    return String(value || "").replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]));
+  }
+  async function loadApprovedReviews() {
+    if (!approvedReviews) return;
+    try {
+      const response = await fetch("/api/reviews");
+      if (!response.ok) return;
+      const data = await response.json();
+      if (data.reviews && data.reviews.length) {
+        approvedReviews.innerHTML = data.reviews.map(review =>
+          '<article class="approved-review"><div class="stars" aria-label="' + Number(review.rating) + ' out of 5 stars">' + "★".repeat(Number(review.rating)) + "☆".repeat(5-Number(review.rating)) + '</div><p>“' + escapeReview(review.review_text) + '”</p><span class="review-note">' + escapeReview(review.customer_name) + '</span></article>'
+        ).join("");
+      }
+    } catch (error) { /* Reviews remain optional if the database is not connected. */ }
+  }
+  if (reviewForm) reviewForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (reviewStatus) reviewStatus.textContent = "Submitting…";
+    const payload = {
+      customer_name: document.getElementById("reviewName").value.trim(),
+      rating: Number(document.getElementById("reviewRating").value),
+      review_text: document.getElementById("reviewText").value.trim()
+    };
+    try {
+      const response = await fetch("/api/reviews", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Unable to submit review.");
+      reviewForm.reset();
+      if (reviewStatus) reviewStatus.textContent = "Thank you. Your review is awaiting approval.";
+    } catch (error) {
+      if (reviewStatus) reviewStatus.textContent = error.message;
+    }
+  });
+  loadApprovedReviews();
+
 });
