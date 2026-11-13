@@ -1,5 +1,30 @@
-export default {
-  async fetch(request, env) {
-    return env.ASSETS.fetch(request);
-  }
-};
+const COOKIE="nova_admin_session";
+const SESSION_SECONDS=60*60*8;
+const json=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store",...headers}});
+const enc=s=>new TextEncoder().encode(s);
+const b64url=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/=/g,"").replace(/\+/g,"-").replace(/\//g,"_");
+async function sign(value,secret){const key=await crypto.subtle.importKey("raw",enc(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);return b64url(await crypto.subtle.sign("HMAC",key,enc(value)))}
+async function validSession(request,env){const cookie=request.headers.get("Cookie")||"";const token=cookie.split(";").map(x=>x.trim()).find(x=>x.startsWith(COOKIE+"="))?.slice(COOKIE.length+1);if(!token||!env.ADMIN_SESSION_SECRET)return false;const [payload,sig]=token.split(".");if(!payload||!sig)return false;try{const decoded=atob(payload.replace(/-/g,"+").replace(/_/g,"/"));const data=JSON.parse(decoded);if(!data.exp||data.exp<Date.now()/1000)return false;return await sign(payload,env.ADMIN_SESSION_SECRET)===sig}catch{return false}}
+const cookie=(value,maxAge)=>`${COOKIE}=${value}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${maxAge}`;
+async function body(request){try{return await request.json()}catch{return null}}
+function clean(s,max=500){return String(s??"").trim().slice(0,max)}
+async function route(request,env){
+ const url=new URL(request.url),path=url.pathname,method=request.method;
+ if(path==="/api/health"&&method==="GET")return json({ok:true,database:!!env.DB});
+ if(!env.DB)return json({error:"Cloudflare D1 database is not connected yet."},503);
+ if(path==="/api/reviews"&&method==="GET"){const {results=[]}=await env.DB.prepare("SELECT id, customer_name, rating, review_text, created_at FROM reviews WHERE status='approved' ORDER BY created_at DESC LIMIT 30").all();return json({reviews:results})}
+ if(path==="/api/reviews"&&method==="POST"){const d=await body(request);if(!d)return json({error:"Invalid request."},400);const name=clean(d.customer_name,80),review=clean(d.review_text,1200),rating=Number(d.rating);if(name.length<2||review.length<10||!Number.isInteger(rating)||rating<1||rating>5)return json({error:"Please provide your name, a review of at least 10 characters and a 1–5 star rating."},400);await env.DB.prepare("INSERT INTO reviews(customer_name,rating,review_text,status,created_at) VALUES(?,?,?,'pending',datetime('now'))").bind(name,rating,review).run();return json({success:true,message:"Thank you. Your review has been submitted for approval."},201)}
+ if(path==="/api/admin/login"&&method==="POST"){const d=await body(request);if(!env.ADMIN_PASSWORD||!env.ADMIN_SESSION_SECRET)return json({error:"Admin secrets have not been configured in Cloudflare yet."},503);if(!d||typeof d.password!=="string"||d.password!==env.ADMIN_PASSWORD)return json({error:"Incorrect password."},401);const payload=b64url(enc(JSON.stringify({exp:Math.floor(Date.now()/1000)+SESSION_SECONDS,nonce:crypto.randomUUID()})));const token=payload+"."+await sign(payload,env.ADMIN_SESSION_SECRET);return json({success:true},{headers:{"set-cookie":cookie(token,SESSION_SECONDS)}})}
+ if(path==="/api/admin/logout"&&method==="POST")return json({success:true},{headers:{"set-cookie":cookie("",0)}});
+ if(path==="/api/admin/session"&&method==="GET")return json({authenticated:await validSession(request,env)});
+ if(path.startsWith("/api/admin/")){if(!await validSession(request,env))return json({error:"Please sign in again."},401);
+  if(path==="/api/admin/summary"&&method==="GET"){const [a,p,u]=await Promise.all([env.DB.prepare("SELECT COUNT(*) n FROM services WHERE active=1").first(),env.DB.prepare("SELECT COUNT(*) n FROM reviews WHERE status='pending'").first(),env.DB.prepare("SELECT COUNT(*) n FROM reviews WHERE status='approved'").first()]);return json({activeServices:a.n,pendingReviews:p.n,publishedReviews:u.n})}
+  if(path==="/api/admin/services"&&method==="GET"){const {results=[]}=await env.DB.prepare("SELECT * FROM services ORDER BY name").all();return json({services:results})}
+  if(path==="/api/admin/services"&&method==="POST"){const d=await body(request);if(!d||clean(d.name,100).length<2)return json({error:"A service name is required."},400);const r=await env.DB.prepare("INSERT INTO services(name,description,price_cents,duration_minutes,active) VALUES(?,?,?,?,?)").bind(clean(d.name,100),clean(d.description,500),Math.max(0,Math.round(Number(d.price_cents)||0)),Math.max(1,Math.round(Number(d.duration_minutes)||60)),d.active?1:0).run();return json({success:true,id:r.meta.last_row_id},201)}
+  const service=path.match(/^\/api\/admin\/services\/(\d+)$/);if(service){const id=Number(service[1]);if(method==="PUT"){const d=await body(request);if(!d||clean(d.name,100).length<2)return json({error:"A service name is required."},400);await env.DB.prepare("UPDATE services SET name=?,description=?,price_cents=?,duration_minutes=?,active=? WHERE id=?").bind(clean(d.name,100),clean(d.description,500),Math.max(0,Math.round(Number(d.price_cents)||0)),Math.max(1,Math.round(Number(d.duration_minutes)||60)),d.active?1:0,id).run();return json({success:true})}if(method==="DELETE"){await env.DB.prepare("DELETE FROM services WHERE id=?").bind(id).run();return json({success:true})}}
+  if(path==="/api/admin/reviews"&&method==="GET"){const {results=[]}=await env.DB.prepare("SELECT * FROM reviews ORDER BY created_at DESC LIMIT 100").all();return json({reviews:results})}
+  const review=path.match(/^\/api\/admin\/reviews\/(\d+)$/);if(review&&method==="PATCH"){const id=Number(review[1]),d=await body(request);if(d?.delete){await env.DB.prepare("DELETE FROM reviews WHERE id=?").bind(id).run();return json({success:true})}if(!["approved","pending","hidden"].includes(d?.status))return json({error:"Invalid review status."},400);await env.DB.prepare("UPDATE reviews SET status=? WHERE id=?").bind(d.status,id).run();return json({success:true})}
+ }
+ return json({error:"Not found."},404)
+}
+export default {async fetch(request,env){try{const url=new URL(request.url);if(url.pathname.startsWith("/api/"))return await route(request,env);return env.ASSETS.fetch(request)}catch(error){return json({error:"Server error. Please try again."},500)}}};
