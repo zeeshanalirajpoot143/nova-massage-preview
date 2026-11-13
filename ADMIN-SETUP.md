@@ -5,7 +5,9 @@
 - Existing Square Appointments link remains the live booking checkout and appointment system.
 - Public customer reviews are submitted to the Worker API and remain pending until approved in the admin dashboard.
 - Admin dashboard: `/admin.html`.
-- Services and review moderation are stored in Cloudflare D1.
+- Services, add-ons, customers, internal appointment notes, invoices, site settings and review moderation are stored in Cloudflare D1.
+- The new invoice area creates internal draft records; it does not send invoices or collect payments until a payment provider is integrated.
+- Internal appointments are not Square appointments. Square remains the live booking system until a secure Square API connection is authorized.
 - Contact form email delivery remains on the existing FormSubmit route. Square booking confirmations/reminders remain controlled by the Square merchant account.
 
 ## Required Cloudflare setup before enabling the admin panel
