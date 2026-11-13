@@ -2172,3 +2172,15 @@ button,a,input,select,textarea{touch-action:manipulation}
 }
 @media(hover:none),(pointer:coarse){.service-card:hover,.checkout-service-card:hover,.gallery-tile:hover{transform:none!important}.service-card img,.gallery-tile img{transform:none!important}}
 @media(prefers-reduced-motion:reduce){.js-reveal{opacity:1!important;transform:none!important}.header-video{animation:none!important}}
+
+
+/* MOBILE CONTENT SAFETY: never leave lower sections/cards hidden behind scroll-reveal. */
+@media (max-width: 760px) {
+  .js-reveal,
+  .js-reveal.is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
