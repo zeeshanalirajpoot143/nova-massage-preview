@@ -647,13 +647,17 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", () => {
       if (selectedServices.has(id)) {
         selectedServices.delete(id);
-        button.textContent = "Add to selection";
-        button.classList.remove("is-added");
       } else {
         selectedServices.set(id, {id, name:title, price, bookingUrl});
-        button.textContent = "Added ✓";
-        button.classList.add("is-added");
       }
+      // Keep the original menu card and its checkout-gallery twin in sync.
+      document.querySelectorAll("[data-checkout-add]").forEach(addButton => {
+        if (addButton.dataset.checkoutAdd !== id) return;
+        const isAdded = selectedServices.has(id);
+        addButton.textContent = isAdded ? "Added ✓" : "Add to selection";
+        addButton.classList.toggle("is-added", isAdded);
+        addButton.setAttribute("aria-pressed", isAdded ? "true" : "false");
+      });
       renderCheckout();
     });
     content.appendChild(button);
