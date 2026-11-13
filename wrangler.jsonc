@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nova-massage-preview",
+  "main": "./worker.js",
+  "compatibility_date": "2026-11-13",
+  "preview_urls": true,
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS"
+  },
+  "previews": {}
+}
