@@ -2104,3 +2104,18 @@ body[data-theme="light"] .services-explore-now{color:#17130d}
   .cards-grid>.service-card{will-change:auto}
 }
 .callback-request-box{margin-top:14px;padding:13px;border:1px solid rgba(201,169,119,.32);background:rgba(201,169,119,.06)}.callback-request-box summary{cursor:pointer;color:var(--nova-gold-light);font-size:11px;font-weight:600}.callback-request-box>p{color:#c7bba8;font-size:10px;line-height:1.6}.callback-request-box label{display:block;margin:10px 0 5px;color:var(--nova-gold-light);font-size:10px}.callback-request-box input,.callback-request-box textarea{width:100%;padding:10px;border:1px solid rgba(201,169,119,.3);background:#171510;color:#fff;font:inherit;font-size:12px}.callback-request-box button{width:100%;min-height:40px;margin-top:12px;border:1px solid var(--nova-gold);background:linear-gradient(120deg,#ead9b8,#c9a977);color:#17130d;font-size:10px;font-weight:700}.callback-request-box #callbackStatus{min-height:18px;color:var(--nova-gold-light);font-size:10px}.callback-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}body[data-theme="light"] .callback-request-box{background:#f8f1e5}body[data-theme="light"] .callback-request-box>p{color:#625744}body[data-theme="light"] .callback-request-box input,body[data-theme="light"] .callback-request-box textarea{background:#fff;color:#28231a}
+
+/* FINAL CLEANUP: remove every glow, halo, outline, or pseudo-layer around the Concierge launcher. */
+.concierge-toggle,
+.concierge-toggle:hover,
+.concierge-toggle:focus,
+.concierge-toggle:focus-visible{
+  box-shadow:none!important;
+  outline:none!important;
+  filter:none!important;
+}
+.concierge-toggle:before,
+.concierge-toggle:after{content:none!important;display:none!important;opacity:0!important}
+.concierge-toggle-icon{box-shadow:none!important;outline:none!important;background:transparent!important}
+.popular-explore-now{margin-top:8px;margin-bottom:24px}
+@media(prefers-reduced-motion:reduce){.services-explore-now,.services-explore-now span{transition:none!important}}
