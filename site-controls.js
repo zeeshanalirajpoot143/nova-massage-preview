@@ -5,6 +5,7 @@
  const style=document.createElement("style");
  style.textContent=`
  .nova-cookie-overlay{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,9,8,.66);backdrop-filter:blur(7px)}
+ .nova-cookie-overlay[hidden],.nova-cookie-dialog [hidden]{display:none!important}
  .nova-cookie-dialog{width:min(560px,100%);padding:30px;border:1px solid rgba(201,169,119,.42);border-radius:18px;background:linear-gradient(145deg,#211d17,#12110e);color:#f5eee2;box-shadow:0 28px 90px rgba(0,0,0,.48);font-family:inherit}
  .nova-cookie-eyebrow{margin:0 0 10px;color:#c9a977;font-size:9px;letter-spacing:.24em;text-transform:uppercase}
  .nova-cookie-dialog h2{margin:0 0 12px;color:#ead9b8;font:400 30px/1.15 Georgia,serif}
@@ -33,8 +34,9 @@
  const footer=document.querySelector("footer")||document.body;
  const reopen=document.createElement("button");reopen.type="button";reopen.className="nova-cookie-footer-link";reopen.textContent="Cookie Settings";reopen.addEventListener("click",()=>show(true));footer.appendChild(reopen);
  const prefs=overlay.querySelector("[data-cookie-prefs]"),actions=overlay.querySelector(".nova-cookie-actions"),saveActions=overlay.querySelector("[data-cookie-save]");
- function show(settings){overlay.hidden=false;prefs.hidden=!settings;actions.hidden=!!settings;saveActions.hidden=!settings;overlay.querySelector('[data-pref="analytics"]').checked=!!saved.analytics;overlay.querySelector('[data-pref="advertising"]').checked=!!saved.advertising;}
- function hide(){overlay.hidden=true}
+ function show(settings){open();prefs.hidden=!settings;actions.hidden=!!settings;saveActions.hidden=!settings;overlay.querySelector('[data-pref="analytics"]').checked=!!saved.analytics;overlay.querySelector('[data-pref="advertising"]').checked=!!saved.advertising;}
+ function hide(){overlay.hidden=true;overlay.setAttribute("aria-hidden","true")}
+ function open(){overlay.hidden=false;overlay.removeAttribute("aria-hidden")}
  function persist(value){saved={necessary:true,analytics:!!value.analytics,advertising:!!value.advertising,decided:true};try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}hide()}
  overlay.querySelector("[data-cookie-accept]").addEventListener("click",()=>persist({analytics:true,advertising:true}));
  overlay.querySelector("[data-cookie-reject]").addEventListener("click",()=>persist({analytics:false,advertising:false}));
