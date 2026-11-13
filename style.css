@@ -1963,3 +1963,17 @@ body[data-theme="light"] .checkout-picker,body[data-theme="light"] .checkout-sum
 body[data-theme="light"] .checkout-picker h3,body[data-theme="light"] .checkout-summary-head,body[data-theme="light"] .checkout-line span,body[data-theme="light"] .checkout-total strong,body[data-theme="light"] .checkout-browse-link,body[data-theme="light"] .checkout-line button,body[data-theme="light"] .checkout-clear{color:var(--nova-gold-deep)}
 body[data-theme="light"] .checkout-hint,body[data-theme="light"] .checkout-disclaimer,body[data-theme="light"] .checkout-empty,body[data-theme="light"] .checkout-total{color:#625744}
 @media(max-width:760px){.checkout-layout{grid-template-columns:1fr}.checkout-picker,.checkout-summary{padding:20px}}
+
+/* NOVA APPOINTMENT REQUEST PREMIUM FORM */
+.appointment-request-form{margin-top:28px;padding:26px;border:1px solid rgba(201,169,119,.38);background:rgba(15,14,11,.78);color:#f4efe6}
+.appointment-request-form h3{margin:0 0 8px;font:400 27px Georgia,serif;color:#ead9b8}
+.appointment-request-form label{display:block;margin:14px 0 6px;font-size:11px;letter-spacing:.06em;color:#d7c5a7}
+.appointment-request-form input,.appointment-request-form textarea{width:100%;min-width:0;padding:12px;border:1px solid rgba(201,169,119,.36);border-radius:2px;background:#171510;color:#fff;font:inherit}
+.appointment-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.appointment-request-form button:disabled{opacity:.55;cursor:wait}
+.appointment-request-status{min-height:22px;font-size:12px;line-height:1.6;color:#ead9b8}
+.appointment-square-link{display:block;margin-top:12px;color:#ead9b8;font-size:11px;text-decoration:underline;text-underline-offset:4px}
+body[data-theme="light"] .appointment-request-form{background:#fffdf8;color:#28231a}
+body[data-theme="light"] .appointment-request-form h3,body[data-theme="light"] .appointment-request-form label,body[data-theme="light"] .appointment-square-link,body[data-theme="light"] .appointment-request-status{color:#9d7947}
+body[data-theme="light"] .appointment-request-form input,body[data-theme="light"] .appointment-request-form textarea{background:#fff;color:#28231a;border-color:rgba(157,121,71,.4)}
+@media(max-width:600px){.appointment-request-form{padding:18px}.appointment-field-grid{grid-template-columns:1fr;gap:0}}
