@@ -758,7 +758,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
         } else {
-          entry.target.classList.remove("is-visible");
+          /* Keep revealed content visible; avoids flicker and disappearing sections during touch scrolling. */
         }
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -35px 0px" });
