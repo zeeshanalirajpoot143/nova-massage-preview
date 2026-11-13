@@ -25,7 +25,7 @@ async function route(request,env){
   const d=await body(request);if(!d)return json({error:"Please complete the callback form."},400);
   if(clean(d.website,120))return json({success:true},201);
   const name=clean(d.customer_name,100),phone=clean(d.customer_phone,40),email=clean(d.customer_email,160),message=clean(d.message,500);
-  if(name.length<2||phone.replace(/\\D/g,"").length<7||(email&&!/^\\S+@\\S+\\.\\S+$/.test(email)))return json({error:"Please provide a valid name and phone number."},400);
+  if(name.length<2||phone.replace(/\D/g,"").length<7||(email&&!/^\S+@\S+\.\S+$/.test(email)))return json({error:"Please provide a valid name and phone number."},400);
   await env.DB.prepare("INSERT INTO callback_requests(customer_name,customer_phone,customer_email,message,status) VALUES(?,?,?,?, 'new')").bind(name,phone,email,message).run();
   return json({success:true,message:"Your callback request has been saved."},201)
  }
