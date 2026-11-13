@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS callback_requests (id INTEGER PRIMARY KEY AUTOINCREMENT,customer_name TEXT NOT NULL,customer_phone TEXT NOT NULL,customer_email TEXT NOT NULL DEFAULT '',message TEXT NOT NULL DEFAULT '',status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','contacted','closed')),created_at TEXT NOT NULL DEFAULT (datetime('now')));
+CREATE INDEX IF NOT EXISTS idx_callback_requests_status_created ON callback_requests(status,created_at DESC);
