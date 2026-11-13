@@ -91,4 +91,4 @@ Never fabricate facts, policies, availability, durations, prices, credentials, o
  }
  return json({error:"Not found."},404)
 }
-export default {async fetch(request,env){try{const url=new URL(request.url);if(url.pathname.startsWith("/api/"))return await route(request,env);return env.ASSETS.fetch(request)}catch(error){return json({error:"Server error. Please try again."},500)}}};
+export default {async fetch(request,env){try{const url=new URL(request.url);if(url.pathname.startsWith("/api/"))return await route(request,env);if(url.pathname==="/"){url.pathname="/index.html";return env.ASSETS.fetch(new Request(url.toString(),request))}return env.ASSETS.fetch(request)}catch(error){return json({error:"Server error. Please try again."},500)}}};
