@@ -584,7 +584,40 @@ document.addEventListener("DOMContentLoaded", function () {
     existingLink.setAttribute("aria-label", "Book " + (card.querySelector("h4")?.textContent?.trim() || "this treatment") + " through Square");
   });
 
-  // Touch-first horizontal service carousel on small screens; desktop remains a clean grid.
+  // Accessible three-card service carousel: three equal cards remain visible on phones,
+  // and each swipe/arrow advances one card so the centre position changes smoothly.
+  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach((grid, sectionIndex) => {
+    grid.setAttribute("role", "region");
+    grid.setAttribute("aria-roledescription", "carousel");
+    grid.setAttribute("aria-label", "Massage treatments");
+    grid.querySelectorAll(".service-card").forEach((card, index) => {
+      card.setAttribute("role", "group");
+      card.setAttribute("aria-roledescription", "slide");
+      card.setAttribute("aria-label", "Treatment " + (index + 1) + " of " + grid.querySelectorAll(".service-card").length);
+    });
+    if (grid.parentElement.querySelector(".service-carousel-controls")) return;
+    const controls = document.createElement("div");
+    controls.className = "service-carousel-controls";
+    controls.innerHTML = '<button type="button" class="service-carousel-arrow" data-carousel-direction="-1" aria-label="Previous treatments">‹</button><span class="service-carousel-position" aria-live="polite">1–3</span><button type="button" class="service-carousel-arrow" data-carousel-direction="1" aria-label="Next treatments">›</button>';
+    grid.insertAdjacentElement("afterend", controls);
+    const cards = Array.from(grid.querySelectorAll(".service-card"));
+    const position = controls.querySelector(".service-carousel-position");
+    const previous = controls.querySelector('[data-carousel-direction="-1"]');
+    const next = controls.querySelector('[data-carousel-direction="1"]');
+    const cardStep = () => cards[0] ? cards[0].getBoundingClientRect().width + (parseFloat(getComputedStyle(grid).columnGap || getComputedStyle(grid).gap) || 0) : grid.clientWidth;
+    const update = () => {
+      const step = cardStep() || 1;
+      const first = Math.min(cards.length, Math.max(1, Math.round(grid.scrollLeft / step) + 1));
+      position.textContent = first + "–" + Math.min(cards.length, first + 2);
+      previous.disabled = grid.scrollLeft <= 2;
+      next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
+    };
+    previous.addEventListener("click", () => grid.scrollBy({left:-cardStep(),behavior:"smooth"}));
+    next.addEventListener("click", () => grid.scrollBy({left:cardStep(),behavior:"smooth"}));
+    grid.addEventListener("scroll", () => window.requestAnimationFrame(update), {passive:true});
+    window.addEventListener("resize", update, {passive:true});
+    update();
+  });
   document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
     grid.setAttribute("aria-label", "Massage treatments. Swipe horizontally to explore.");
     grid.querySelectorAll(".service-card").forEach((card, index) => {
