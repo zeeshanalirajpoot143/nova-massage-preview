@@ -2529,3 +2529,15 @@ body.cart-is-open{overflow:hidden}
     -webkit-user-drag:none;user-select:none;-webkit-user-select:none
   }
 }
+
+
+/* Functional Explore Treatments and tap-to-advance swipe prompts */
+.services-explore-now{display:inline-flex!important;align-items:center;justify-content:center;gap:10px;cursor:pointer;font:inherit}
+.service-swipe-hint{width:100%;border:0;background:transparent;cursor:pointer;text-align:left;padding:8px 2px;touch-action:manipulation}
+.service-swipe-hint:focus-visible,.services-explore-now:focus-visible{outline:2px solid #987443;outline-offset:4px}
+.service-swipe-hint span{display:inline-block;transition:transform .25s ease}
+.service-swipe-hint:active span{transform:translateX(7px)}
+@media(max-width:760px){
+  .service-swipe-hint{display:flex!important;min-height:42px!important;align-items:center;justify-content:space-between}
+  .services-explore-now{margin-top:10px!important}
+}
