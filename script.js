@@ -609,6 +609,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const step = cardStep() || 1;
       const first = Math.min(cards.length, Math.max(1, Math.round(grid.scrollLeft / step) + 1));
       position.textContent = first + "–" + Math.min(cards.length, first + 2);
+      cards.forEach(card => card.classList.remove("is-carousel-center"));
+      if (cards.length) cards[Math.min(cards.length - 1, first)].classList.add("is-carousel-center");
       previous.disabled = grid.scrollLeft <= 2;
       next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
     };
