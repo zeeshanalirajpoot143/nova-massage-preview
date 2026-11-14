@@ -2502,3 +2502,12 @@ body.cart-is-open{overflow:hidden}
   .main-nav .theme-option{padding:0 5px!important;font-size:8px!important}
 }
 @media(prefers-reduced-motion:reduce){.mobile-menu-toggle,.mobile-menu-toggle span,.main-nav .nav-links,.main-nav .nav-links a{transition:none!important}}
+
+
+/* Improve NOVA wordmark contrast on the light mobile header only */
+@media(max-width:760px){
+  body[data-theme="light"] .main-nav .brand{
+    color:#382a1b!important;
+    text-shadow:0 1px 0 rgba(255,255,255,.35)!important;
+  }
+}
