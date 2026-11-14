@@ -573,20 +573,129 @@ document.addEventListener("DOMContentLoaded", function () {
   }));
   if (searchInput) searchInput.addEventListener("input", filterServices);
 
-  // SINGLE BOOKING PATH: customers choose a treatment on its card and continue directly to Square.
-  // No second selection gallery, duplicate checkout, or parallel appointment-request form.
+  // NOVA SERVICE CART — selection is stored locally; Square remains the booking source of truth.
+  const novaCartKey = "nova-service-cart-v1";
+  const cartButton = document.getElementById("navCartButton");
+  const cartPanel = document.getElementById("serviceCart");
+  const cartBackdrop = document.getElementById("serviceCartBackdrop");
+  const cartClose = document.getElementById("serviceCartClose");
+  const cartContinue = document.getElementById("serviceCartContinue");
+  const cartCheckout = document.getElementById("serviceCartCheckout");
+  const cartItems = document.getElementById("serviceCartItems");
+  const cartCount = document.getElementById("navCartCount");
+  const cartCountLabel = document.getElementById("serviceCartCountLabel");
+  const cartTotal = document.getElementById("serviceCartTotal");
+  let novaCart = [];
+  try {
+    const stored = JSON.parse(localStorage.getItem(novaCartKey) || "[]");
+    if (Array.isArray(stored)) novaCart = stored.filter(item =>
+      item && /^[A-Z0-9]{10,40}$/.test(item.id) &&
+      typeof item.name === "string" && typeof item.url === "string" &&
+      /^https:\/\/book\.squareup\.com\//.test(item.url) &&
+      Number.isFinite(Number(item.price)) && Number(item.price) >= 0
+    ).slice(0, 15);
+  } catch (error) { novaCart = []; }
+
+  const money = value => "$" + Number(value).toFixed(2).replace(/\.00$/, "");
+  function saveCart() {
+    try { localStorage.setItem(novaCartKey, JSON.stringify(novaCart)); } catch (error) {}
+  }
+  function renderCart() {
+    const count = novaCart.length;
+    const total = novaCart.reduce((sum, item) => sum + Number(item.price), 0);
+    if (cartCount) cartCount.textContent = String(count);
+    if (cartCountLabel) cartCountLabel.textContent = "(" + count + ")";
+    if (cartTotal) cartTotal.textContent = money(total);
+    if (cartCheckout) cartCheckout.disabled = count === 0;
+    if (!cartItems) return;
+    if (!count) {
+      cartItems.innerHTML = '<p class="cart-empty">Your cart is empty. Add a treatment to get started.</p>';
+      return;
+    }
+    cartItems.innerHTML = novaCart.map(item =>
+      '<article class="service-cart-item"><div class="service-cart-item-copy"><strong>' +
+      escapeCartText(item.name) + '</strong><span>' + money(item.price) +
+      '</span></div><button type="button" class="service-cart-remove" data-cart-remove="' +
+      escapeCartText(item.id) + '" aria-label="Remove ' + escapeCartText(item.name) +
+      ' from cart">Remove</button></article>'
+    ).join("");
+  }
+  function escapeCartText(value) {
+    return String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  }
+  function setCartOpen(open) {
+    if (!cartPanel || !cartButton) return;
+    cartPanel.classList.toggle("is-open", open);
+    cartPanel.setAttribute("aria-hidden", String(!open));
+    cartPanel.inert = !open;
+    cartBackdrop.hidden = !open;
+    cartButton.setAttribute("aria-expanded", String(open));
+    document.body.classList.toggle("cart-is-open", open);
+    if (open) cartClose?.focus();
+    else cartButton.focus();
+  }
+  cartButton?.addEventListener("click", () => setCartOpen(true));
+  cartClose?.addEventListener("click", () => setCartOpen(false));
+  cartContinue?.addEventListener("click", () => setCartOpen(false));
+  cartBackdrop?.addEventListener("click", () => setCartOpen(false));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && cartPanel?.classList.contains("is-open")) setCartOpen(false);
+  });
+  cartItems?.addEventListener("click", event => {
+    const button = event.target.closest("[data-cart-remove]");
+    if (!button) return;
+    novaCart = novaCart.filter(item => item.id !== button.dataset.cartRemove);
+    saveCart(); renderCart();
+  });
   document.querySelectorAll(".service-card").forEach(card => {
     const content = card.querySelector(".service-content") || card;
     const existingLink = content.querySelector("a[data-square-url]");
     if (!existingLink) return;
+    const id = card.dataset.serviceId || card.id.replace("service-", "");
+    const name = card.querySelector("h4")?.textContent?.trim() || "NOVA Treatment";
+    const meta = content.querySelector(".service-meta")?.textContent || "";
+    const priceMatch = meta.match(/\$\s*(\d+(?:\.\d{1,2})?)/);
+    const price = priceMatch ? Number(priceMatch[1]) : null;
+    const url = existingLink.dataset.squareUrl;
     existingLink.classList.add("service-booking-link");
-    existingLink.textContent = "Book this treatment";
-    existingLink.setAttribute("aria-label", "Book " + (card.querySelector("h4")?.textContent?.trim() || "this treatment") + " through Square");
+    existingLink.textContent = "Add to Cart";
+    existingLink.removeAttribute("target");
+    existingLink.removeAttribute("rel");
+    existingLink.setAttribute("href", "#");
+    existingLink.setAttribute("role", "button");
+    existingLink.setAttribute("aria-label", "Add " + name + " to cart");
+    if (price === null) {
+      existingLink.textContent = "Price unavailable — contact us";
+      existingLink.setAttribute("aria-disabled", "true");
+      return;
+    }
+    existingLink.addEventListener("click", event => {
+      event.preventDefault();
+      if (!novaCart.some(item => item.id === id)) {
+        novaCart.push({id,name,price,url});
+        saveCart(); renderCart();
+      }
+      setCartOpen(true);
+    });
   });
+  cartCheckout?.addEventListener("click", () => {
+    if (!novaCart.length) return;
+    const first = novaCart[0];
+    const otherServices = novaCart.slice(1).map(item => item.name);
+    if (otherServices.length) {
+      const confirmed = window.confirm(
+        "Your cart contains " + novaCart.length + " treatments. Square will open the first selected service. " +
+        "Please add or confirm the remaining treatments in Square if its booking flow allows it. " +
+        "Your NOVA cart is only a selection summary, not a confirmed multi-service booking. Continue?"
+      );
+      if (!confirmed) return;
+    }
+    window.open(first.url, "_blank", "noopener,noreferrer");
+  });
+  renderCart();
 
-  // Accessible three-card service carousel: three equal cards remain visible on phones,
-  // and each swipe/arrow advances one card so the centre position changes smoothly.
-  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach((grid, sectionIndex) => {
+  // Three-card carousel: swipe and arrow controls advance the track by one card.
+  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
     grid.setAttribute("role", "region");
     grid.setAttribute("aria-roledescription", "carousel");
     grid.setAttribute("aria-label", "Massage treatments");
@@ -619,12 +728,6 @@ document.addEventListener("DOMContentLoaded", function () {
     grid.addEventListener("scroll", () => window.requestAnimationFrame(update), {passive:true});
     window.addEventListener("resize", update, {passive:true});
     update();
-  });
-  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
-    grid.setAttribute("aria-label", "Massage treatments. Swipe horizontally to explore.");
-    grid.querySelectorAll(".service-card").forEach((card, index) => {
-      card.style.setProperty("--service-order", String(index));
-    });
   });
 
   // FREE CALLBACK REQUEST: stored in the NOVA admin dashboard; no SMS/call automation.
