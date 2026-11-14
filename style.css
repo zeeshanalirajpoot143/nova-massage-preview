@@ -2511,3 +2511,21 @@ body.cart-is-open{overflow:hidden}
     text-shadow:0 1px 0 rgba(255,255,255,.35)!important;
   }
 }
+
+
+/* Make touch swipes explicit and reliable on treatment carousels */
+@media(max-width:760px){
+  #wellness .cards-grid,#popular .cards-grid{
+    touch-action:pan-y!important;
+    overscroll-behavior-x:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    cursor:grab
+  }
+  #wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+    pointer-events:auto!important;
+    user-select:none;-webkit-user-select:none
+  }
+  #wellness .cards-grid img,#popular .cards-grid img{
+    -webkit-user-drag:none;user-select:none;-webkit-user-select:none
+  }
+}
