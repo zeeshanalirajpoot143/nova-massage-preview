@@ -2291,3 +2291,97 @@ body[data-theme="light"] .concierge-panel,body[data-theme="light"] .concierge-wi
   #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
   .service-card.image-card{animation:none!important;transition:none!important}
 }
+
+
+/* FINAL CAROUSEL REFINEMENT — compact, equal-size 3-up cards on every viewport */
+#wellness .cards-grid,#popular .cards-grid{
+  display:flex!important;flex-flow:row nowrap!important;align-items:stretch!important;
+  gap:clamp(10px,1.5vw,20px)!important;width:100%!important;max-width:100%!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  padding:10px 2px 20px!important;margin:0!important;
+  scroll-snap-type:x mandatory!important;scroll-padding-inline:2px!important;
+  overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important;
+  scrollbar-width:none!important;touch-action:pan-x pan-y!important
+}
+#wellness .cards-grid::-webkit-scrollbar,#popular .cards-grid::-webkit-scrollbar{display:none}
+#wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+  display:flex!important;flex:0 0 calc((100% - 2 * clamp(10px,1.5vw,20px))/3)!important;
+  width:calc((100% - 2 * clamp(10px,1.5vw,20px))/3)!important;
+  max-width:calc((100% - 2 * clamp(10px,1.5vw,20px))/3)!important;
+  min-width:0!important;height:clamp(350px,39vw,485px)!important;min-height:0!important;
+  margin:0!important;scroll-snap-align:start!important;scroll-snap-stop:always!important;
+  opacity:1!important;transform:none!important;animation:none!important;
+  border-radius:12px!important
+}
+#wellness .service-card.image-card>img,#popular .service-card.image-card>img{
+  width:100%!important;height:clamp(105px,13vw,175px)!important;min-height:0!important;
+  flex:0 0 auto!important;object-fit:cover!important
+}
+#wellness .service-card.image-card .service-content,#popular .service-card.image-card .service-content{
+  display:flex!important;flex:1!important;flex-direction:column!important;align-items:stretch!important;
+  min-height:0!important;padding:clamp(10px,1.5vw,20px)!important;gap:5px!important
+}
+#wellness .service-card.image-card .service-content h4,#popular .service-card.image-card .service-content h4{
+  min-height:2.5em!important;display:block!important;margin:0!important;
+  font-size:clamp(13px,1.55vw,21px)!important;line-height:1.18!important;overflow-wrap:anywhere
+}
+#wellness .service-card.image-card .service-meta,#popular .service-card.image-card .service-meta{
+  min-height:0!important;margin:3px 0 5px!important;font-size:clamp(9px,.9vw,12px)!important
+}
+#wellness .service-card.image-card .service-content>p,#popular .service-card.image-card .service-content>p{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:4!important;
+  overflow:hidden!important;margin:0!important;font-size:clamp(9px,.95vw,12px)!important;line-height:1.45!important
+}
+#wellness .service-card .service-booking-link,#popular .service-card .service-booking-link{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-height:36px!important;padding:7px 5px!important;margin-top:auto!important;
+  font-size:clamp(8px,.85vw,11px)!important;line-height:1.2!important;text-align:center!important
+}
+.service-carousel-controls{
+  display:flex;align-items:center;justify-content:center;gap:18px;margin:7px auto 0;
+  color:#8e6b3c;font-size:12px
+}
+.service-carousel-arrow{
+  display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+  border:1px solid rgba(152,116,67,.4);border-radius:50%;background:#fffdf8;color:#8e6b3c;
+  font-size:24px;line-height:1;cursor:pointer;transition:background .2s,opacity .2s
+}
+.service-carousel-arrow:disabled{opacity:.3;cursor:default}
+.service-carousel-arrow:not(:disabled):active{background:#ead9b8}
+.service-carousel-position{min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+@media(max-width:760px){
+  #wellness .cards-grid,#popular .cards-grid{gap:8px!important;padding:7px 1px 14px!important}
+  #wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+    flex-basis:calc((100% - 16px)/3)!important;width:calc((100% - 16px)/3)!important;
+    max-width:calc((100% - 16px)/3)!important;height:clamp(285px,92vw,365px)!important;
+    border-radius:9px!important
+  }
+  #wellness .service-card.image-card>img,#popular .service-card.image-card>img{height:clamp(76px,24vw,105px)!important}
+  #wellness .service-card.image-card .service-content,#popular .service-card.image-card .service-content{padding:8px 7px!important;gap:4px!important}
+  #wellness .service-card.image-card .service-content h4,#popular .service-card.image-card .service-content h4{
+    min-height:3em!important;font-size:clamp(10px,3.05vw,12px)!important;line-height:1.12!important
+  }
+  #wellness .service-card.image-card .service-meta,#popular .service-card.image-card .service-meta{
+    font-size:9px!important;line-height:1.2!important;margin:2px 0 3px!important
+  }
+  #wellness .service-card.image-card .service-content>p,#popular .service-card.image-card .service-content>p{
+    -webkit-line-clamp:5!important;font-size:clamp(8px,2.45vw,9.5px)!important;line-height:1.35!important
+  }
+  #wellness .service-card .service-booking-link,#popular .service-card .service-booking-link{
+    min-height:32px!important;padding:5px 3px!important;font-size:clamp(7px,2.1vw,8.5px)!important;
+    letter-spacing:0!important;white-space:normal!important
+  }
+  .service-carousel-controls{margin-top:4px;gap:14px}
+  .service-carousel-arrow{width:32px;height:32px;font-size:21px}
+  .service-swipe-hint{font-size:10px;margin-bottom:7px}
+}
+@media(max-width:350px){
+  #wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+    height:clamp(275px,98vw,335px)!important
+  }
+  #wellness .service-card.image-card .service-content,#popular .service-card.image-card .service-content{padding:6px 5px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
+  .service-carousel-arrow{transition:none!important}
+}
