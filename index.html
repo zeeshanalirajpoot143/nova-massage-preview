@@ -196,10 +196,9 @@
         <h2>
           Wellness Combo Massages
         </h2>
-        <a class="services-explore-now" href="#wellness">Explore Treatments <span aria-hidden="true">↗</span></a>
-
-        <p class="service-swipe-hint">Swipe to explore treatments <span aria-hidden="true">→</span></p>
-        <div class="cards-grid three-cols">
+        <button class="services-explore-now" type="button" data-explore-target="wellnessTreatments">Explore Treatments <span aria-hidden="true">↗</span></button>
+        <button class="service-swipe-hint" type="button" data-swipe-target="wellnessTreatments">Swipe to explore treatments <span aria-hidden="true">→</span></button>
+        <div class="cards-grid three-cols" id="wellnessTreatments">
 
           <!-- Stone + Scalp -->
 
@@ -346,7 +345,6 @@
         <div class="section-kicker">FIND YOUR RESET</div>
         <h2>Popular Massages</h2>
         <p class="section-intro">Thoughtfully selected treatments to help you slow down, release tension and reconnect with yourself.</p>
-        <a class="services-explore-now popular-explore-now" href="#popular">Explore Treatments <span aria-hidden="true">↗</span></a>
         <div class="service-tools">
           <label class="service-search-wrap"><span class="sr-only">Search treatments</span><span class="search-mark" aria-hidden="true">⌕</span><input id="serviceSearch" type="search" placeholder="Search treatments..." autocomplete="off"></label>
           <div class="service-filters" role="group" aria-label="Filter treatments">
@@ -357,8 +355,9 @@
           </div>
         </div>
         <p class="service-results" id="serviceResults" aria-live="polite">Explore all treatments</p>
-        <p class="service-swipe-hint">Swipe to explore treatments <span aria-hidden="true">→</span></p>
-        <div class="cards-grid three-cols popular-grid">
+        <button class="services-explore-now popular-explore-now" type="button" data-explore-target="popularTreatments">Explore Treatments <span aria-hidden="true">↗</span></button>
+        <button class="service-swipe-hint" type="button" data-swipe-target="popularTreatments">Swipe to explore treatments <span aria-hidden="true">→</span></button>
+        <div class="cards-grid three-cols popular-grid" id="popularTreatments">
 
           <!-- 2 Hour Bliss -->
 
