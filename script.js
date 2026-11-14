@@ -522,12 +522,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  let savedTheme = "dark";
+  let savedTheme = "light";
   try {
     const storedTheme = localStorage.getItem("nova-massage-theme");
     if (storedTheme === "light" || storedTheme === "dark") savedTheme = storedTheme;
   } catch (error) {
-    // Keep the default dark theme.
+    // Keep the default light theme.
   }
   applyTheme(savedTheme);
 
@@ -573,165 +573,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }));
   if (searchInput) searchInput.addEventListener("input", filterServices);
 
-  // NOVA SERVICE SELECTION & SQUARE CHECKOUT
-  const checkoutItems = document.getElementById("checkoutItems");
-  const checkoutCount = document.getElementById("checkoutCount");
-  const checkoutSubtotal = document.getElementById("checkoutSubtotal");
-  const checkoutContinue = document.getElementById("checkoutContinue");
-  const checkoutClear = document.getElementById("checkoutClear");
-  const checkoutTipAmount = document.getElementById("checkoutTipAmount");
-  const checkoutGrandTotal = document.getElementById("checkoutGrandTotal");
-  const customTipField = document.getElementById("customTipField");
-  const customTipAmount = document.getElementById("customTipAmount");
-  let selectedTip = 20;
-  const squareLocationUrl = "https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services";
-  const selectedServices = new Map();
-  // Build an Explore Now-style service gallery from the actual published service cards.
-  const checkoutServiceGrid = document.getElementById("checkoutServiceGrid");
-  if (checkoutServiceGrid) {
-    document.querySelectorAll("#wellness .service-card, #popular .service-card").forEach((sourceCard, index) => {
-      const clone = sourceCard.cloneNode(true);
-      clone.classList.add("checkout-service-card");
-      clone.removeAttribute("id");
-      clone.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
-      clone.querySelectorAll("a,button").forEach(node => node.remove());
-      const image = clone.querySelector("img");
-      if (image) { image.loading = "lazy"; image.alt = image.alt || "NOVA massage treatment"; }
-      clone.dataset.checkoutGalleryCard = String(index);
-      checkoutServiceGrid.appendChild(clone);
-    });
-  }
-  const formatCheckoutMoney = value => "$" + value.toFixed(2);
-  const checkoutEscape = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-  function renderCheckout() {
-    if (!checkoutItems) return;
-    const items = Array.from(selectedServices.values());
-    const subtotal = items.reduce((sum, item) => sum + item.price, 0);
-    const tipValue = selectedTip === "custom" ? Math.max(0, Number(customTipAmount?.value || 0)) : subtotal * Number(selectedTip) / 100;
-    if (checkoutTipAmount) checkoutTipAmount.textContent = formatCheckoutMoney(tipValue);
-    if (checkoutGrandTotal) checkoutGrandTotal.textContent = formatCheckoutMoney(subtotal + tipValue);
-    if (checkoutCount) checkoutCount.textContent = items.length + (items.length === 1 ? " item" : " items");
-    if (checkoutSubtotal) checkoutSubtotal.textContent = formatCheckoutMoney(subtotal);
-    checkoutItems.innerHTML = items.length ? items.map(item =>
-      '<div class="checkout-line"><div><strong>' + checkoutEscape(item.name) + '</strong><span>' + formatCheckoutMoney(item.price) + '</span></div><button type="button" data-checkout-remove="' + checkoutEscape(item.id) + '" aria-label="Remove ' + checkoutEscape(item.name) + '">Remove</button></div>'
-    ).join("") : '<p class="checkout-empty">Your selection is empty. Add a service to get started.</p>';
-    checkoutItems.querySelectorAll("[data-checkout-remove]").forEach(button => button.addEventListener("click", () => {
-      selectedServices.delete(button.dataset.checkoutRemove);
-      document.querySelectorAll("[data-checkout-add]").forEach(add => {
-        if (add.dataset.checkoutAdd === button.dataset.checkoutRemove) { add.textContent = "Add to selection"; add.classList.remove("is-added"); }
-      });
-      renderCheckout();
-    }));
-    if (checkoutContinue) {
-      checkoutContinue.classList.toggle("is-disabled", !items.length);
-      checkoutContinue.setAttribute("aria-disabled", items.length ? "false" : "true");
-      checkoutContinue.href = items.length === 1 && items[0].bookingUrl ? items[0].bookingUrl : squareLocationUrl;
-      checkoutContinue.textContent = items.length ? "Continue to Square booking" : "Select a service to continue";
-    }
-  }
-  document.querySelectorAll(".service-card").forEach((card, index) => {
+  // SINGLE BOOKING PATH: customers choose a treatment on its card and continue directly to Square.
+  // No second selection gallery, duplicate checkout, or parallel appointment-request form.
+  document.querySelectorAll(".service-card").forEach(card => {
     const content = card.querySelector(".service-content") || card;
-    if (content.querySelector("[data-checkout-add]")) return;
-    const title = card.querySelector("h4")?.textContent?.trim() || "Massage service";
-    const priceText = content.textContent.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
-    const price = priceText ? Number(priceText[1].replace(/,/g, "")) : 0;
-    const bookingUrl = card.querySelector("[data-square-url]")?.dataset.squareUrl || squareLocationUrl;
-    const id = card.dataset.serviceId || ("nova-service-" + index);
-    if (!price) return;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "secondary-button checkout-add-button";
-    button.dataset.checkoutAdd = id;
-    button.id = "add-service-" + id;
-    button.textContent = "Add to selection";
-    button.addEventListener("click", () => {
-      if (selectedServices.has(id)) {
-        selectedServices.delete(id);
-      } else {
-        selectedServices.set(id, {id, name:title, price, bookingUrl});
-      }
-      // Keep the original menu card and its checkout-gallery twin in sync.
-      document.querySelectorAll("[data-checkout-add]").forEach(addButton => {
-        if (addButton.dataset.checkoutAdd !== id) return;
-        const isAdded = selectedServices.has(id);
-        addButton.textContent = isAdded ? "Added ✓" : "Add to selection";
-        addButton.classList.toggle("is-added", isAdded);
-        addButton.setAttribute("aria-pressed", isAdded ? "true" : "false");
-      });
-      renderCheckout();
-    });
-    content.appendChild(button);
+    const existingLink = content.querySelector("a[data-square-url]");
+    if (!existingLink) return;
+    existingLink.classList.add("service-booking-link");
+    existingLink.textContent = "Book this treatment";
+    existingLink.setAttribute("aria-label", "Book " + (card.querySelector("h4")?.textContent?.trim() || "this treatment") + " through Square");
   });
-  document.querySelectorAll("[data-tip]").forEach(button => button.addEventListener("click", () => {
-    selectedTip = button.dataset.tip === "custom" ? "custom" : Number(button.dataset.tip);
-    document.querySelectorAll("[data-tip]").forEach(option => option.classList.toggle("is-active", option === button));
-    if (customTipField) customTipField.hidden = selectedTip !== "custom";
-    renderCheckout();
-  }));
-  if (customTipAmount) customTipAmount.addEventListener("input", renderCheckout);
-  if (checkoutClear) checkoutClear.addEventListener("click", () => {
-    selectedServices.clear();
-    document.querySelectorAll("[data-checkout-add]").forEach(button => { button.textContent = "Add to selection"; button.classList.remove("is-added"); });
-    renderCheckout();
-  });
-  if (checkoutContinue) checkoutContinue.addEventListener("click", event => {
-    if (!selectedServices.size) { event.preventDefault(); document.getElementById("checkout")?.scrollIntoView({behavior:"smooth"}); return; }
-    if (selectedServices.size > 1) {
-      // Square's public booking page is the secure source of truth for multi-service selection.
-      // Customers confirm their chosen treatments in Square before payment.
-    }
-  });
-  renderCheckout();
 
-  // NOVA APPOINTMENT REQUEST FORM
-  const appointmentRequestForm = document.getElementById("appointmentRequestForm");
-  const appointmentRequestDate = document.getElementById("appointmentRequestDate");
-  const appointmentRequestStatus = document.getElementById("appointmentRequestStatus");
-  const appointmentRequestServices = document.getElementById("appointmentRequestServices");
-  if (appointmentRequestDate) {
-    const todayLocal = new Date();
-    const localDate = new Date(todayLocal.getTime() - todayLocal.getTimezoneOffset() * 60000).toISOString().slice(0,10);
-    appointmentRequestDate.min = localDate;
-  }
-  if (appointmentRequestForm) appointmentRequestForm.addEventListener("submit", async event => {
-    event.preventDefault();
-    const chosen = Array.from(selectedServices.values());
-    if (!chosen.length) {
-      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Please add at least one service above before requesting an appointment.";
-      document.getElementById("checkout")?.scrollIntoView({behavior:"smooth"});
-      return;
-    }
-    const date = document.getElementById("appointmentRequestDate").value;
-    const time = document.getElementById("appointmentRequestTime").value;
-    const preferred = new Date(date + "T" + time);
-    if (!date || !time || Number.isNaN(preferred.getTime()) || preferred.getTime() <= Date.now()) {
-      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Please choose a future date and time.";
-      return;
-    }
-    const payload = {
-      customer_name: document.getElementById("appointmentRequestName").value.trim(),
-      customer_email: document.getElementById("appointmentRequestEmail").value.trim(),
-      customer_phone: document.getElementById("appointmentRequestPhone").value.trim(),
-      appointment_at: date + "T" + time,
-      service_name: chosen.map(item => item.name).join(", ").slice(0,500),
-      notes: document.getElementById("appointmentRequestNotes").value.trim()
-    };
-    if (appointmentRequestServices) appointmentRequestServices.value = payload.service_name;
-    const submit = document.getElementById("appointmentRequestSubmit");
-    if (submit) submit.disabled = true;
-    if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Sending your request…";
-    try {
-      const response = await fetch("/api/appointment-request", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Unable to send appointment request.");
-      if (appointmentRequestStatus) appointmentRequestStatus.textContent = "Your preferred appointment request has been received. It is not confirmed yet. Please call or WhatsApp +1 (708) 400-9333, or complete booking through Square.";
-      appointmentRequestForm.reset();
-      selectedServices.clear();
-      document.querySelectorAll("[data-checkout-add]").forEach(button => {button.textContent="Add to selection";button.classList.remove("is-added");});
-      renderCheckout();
-    } catch (error) {
-      if (appointmentRequestStatus) appointmentRequestStatus.textContent = error.message + " Please call +1 (708) 400-9333.";
-    } finally { if (submit) submit.disabled = false; }
+  // Touch-first horizontal service carousel on small screens; desktop remains a clean grid.
+  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
+    grid.setAttribute("aria-label", "Massage treatments. Swipe horizontally to explore.");
+    grid.querySelectorAll(".service-card").forEach((card, index) => {
+      card.style.setProperty("--service-order", String(index));
+    });
   });
 
   // FREE CALLBACK REQUEST: stored in the NOVA admin dashboard; no SMS/call automation.
@@ -747,7 +605,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // SCROLL REVEALS
-  const revealTargets = document.querySelectorAll("main > section,.about-grid,.cards-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section,.service-tools,.service-search-wrap,.service-filters,.filter-chip,.checkout-picker,.checkout-summary,.checkout-step-heading,.checkout-step-note,.checkout-service-card,.checkout-line,.appointment-request-form");
+  const revealTargets = document.querySelectorAll("main > section,.about-grid,.cards-grid,.service-card,.gallery-tile,.ritual-panel,.faq-item,.reviews-empty,.section-heading,.section-intro,.wellness-card,.review-card,.contact-grid,.about-section,.wellness-section,.reviews-section,.gallery-section,.faq-section,.contact-section,.service-tools,.service-search-wrap,.service-filters,.filter-chip");
   revealTargets.forEach((element, index) => {
     element.classList.add("js-reveal");
     element.style.transitionDelay = (index % 3) * 70 + "ms";
