@@ -2385,3 +2385,5 @@ body[data-theme="light"] .concierge-panel,body[data-theme="light"] .concierge-wi
   #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
   .service-carousel-arrow{transition:none!important}
 }
+
+#wellness .service-card.is-carousel-center,#popular .service-card.is-carousel-center{border-color:rgba(180,139,79,.72)!important;box-shadow:0 12px 30px rgba(65,49,27,.13),inset 0 0 0 1px rgba(180,139,79,.12)!important}
