@@ -20,6 +20,37 @@ document.addEventListener("DOMContentLoaded", function () {
   // ELEMENTS
   // ========================================
 
+  // MOBILE NAVIGATION — accessible animated menu
+  const mainNav = document.querySelector(".main-nav");
+  const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+  const mobileNavLinks = document.getElementById("mobileNavLinks");
+  function setMobileMenu(open) {
+    if (!mainNav || !mobileMenuToggle || !mobileNavLinks) return;
+    const isMobile = window.matchMedia("(max-width: 760px)").matches;
+    const shouldOpen = Boolean(open && isMobile);
+    mainNav.classList.toggle("mobile-menu-open", shouldOpen);
+    document.body.classList.toggle("mobile-menu-active", shouldOpen);
+    mobileMenuToggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+    mobileMenuToggle.setAttribute("aria-label", shouldOpen ? "Close navigation menu" : "Open navigation menu");
+    mobileNavLinks.setAttribute("aria-hidden", isMobile && !shouldOpen ? "true" : "false");
+    mobileNavLinks.querySelectorAll("a").forEach(link => {
+      if (isMobile && !shouldOpen) link.setAttribute("tabindex", "-1");
+      else link.removeAttribute("tabindex");
+    });
+  }
+  if (mobileMenuToggle && mainNav && mobileNavLinks) {
+    setMobileMenu(false);
+    mobileMenuToggle.addEventListener("click", () => setMobileMenu(mobileMenuToggle.getAttribute("aria-expanded") !== "true"));
+    mobileNavLinks.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setMobileMenu(false)));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && mobileMenuToggle.getAttribute("aria-expanded") === "true") { setMobileMenu(false); mobileMenuToggle.focus(); }
+    });
+    document.addEventListener("click", event => {
+      if (mobileMenuToggle.getAttribute("aria-expanded") === "true" && !mainNav.contains(event.target)) setMobileMenu(false);
+    });
+    window.addEventListener("resize", () => { if (!window.matchMedia("(max-width: 760px)").matches) setMobileMenu(false); });
+  }
+
   const body = document.body;
 
   const dropLineTrigger =
