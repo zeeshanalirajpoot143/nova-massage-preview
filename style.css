@@ -2541,3 +2541,55 @@ body.cart-is-open{overflow:hidden}
   .service-swipe-hint{display:flex!important;min-height:42px!important;align-items:center;justify-content:space-between}
   .services-explore-now{margin-top:10px!important}
 }
+
+
+/* NOVA service details — elegant, accessible, mobile-first modal */
+.service-details-button{
+  display:flex;align-items:center;justify-content:center;width:100%;min-height:36px;
+  margin-top:7px;padding:8px 10px;border:1px solid rgba(152,116,67,.42);border-radius:999px;
+  background:#fffdf8;color:#76552f;font:600 11px/1.2 "DM Sans",sans-serif;letter-spacing:.07em;
+  text-transform:uppercase;cursor:pointer;transition:background .22s ease,transform .22s ease,border-color .22s ease
+}
+.service-details-button:hover{background:#f1e8d9;border-color:#987443;transform:translateY(-1px)}
+.service-details-button:focus-visible,.service-detail-close:focus-visible,.service-detail-book:focus-visible{outline:2px solid #987443;outline-offset:3px}
+.service-detail-open{overflow:hidden}
+.service-detail-modal{position:fixed;inset:0;z-index:100100;display:grid;place-items:center;padding:20px}
+.service-detail-modal[hidden]{display:none}
+.service-detail-backdrop{position:absolute;inset:0;background:rgba(31,25,18,.66);backdrop-filter:blur(5px);animation:detailFadeIn .2s ease both}
+.service-detail-panel{
+  position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  width:min(880px,100%);max-height:min(88svh,760px);overflow:auto;border:1px solid rgba(190,157,105,.35);
+  border-radius:22px;background:#fffdf8;color:#382f24;box-shadow:0 28px 90px rgba(0,0,0,.28);
+  animation:detailPanelIn .28s cubic-bezier(.2,.75,.25,1) both
+}
+.service-detail-image-wrap{min-height:100%;background:#eee5d7}
+.service-detail-image{display:block;width:100%;height:100%;min-height:420px;max-height:680px;object-fit:cover}
+.service-detail-copy{position:relative;padding:clamp(25px,4vw,46px);align-self:center}
+.service-detail-close{position:absolute;top:14px;right:14px;z-index:2;width:38px;height:38px;border:1px solid #e4d6bf;border-radius:50%;background:#fffdf8;color:#493a27;font-size:25px;line-height:1;cursor:pointer}
+.service-detail-eyebrow{color:#987443;font-size:10px;font-weight:700;letter-spacing:.18em}
+.service-detail-copy h2{margin:12px 38px 9px 0;color:#493a27;font:500 clamp(26px,3.3vw,38px)/1.1 "Cormorant Garamond",Georgia,serif}
+.service-detail-meta{margin:0 0 18px;color:#987443;font-size:12px;font-weight:700;letter-spacing:.04em}
+.service-detail-highlight{margin:0;color:#514536;font:500 16px/1.7 "DM Sans",sans-serif}
+.service-detail-divider{height:1px;margin:22px 0;background:#e9dfd0}
+.service-detail-copy h3{margin:0 0 8px;color:#493a27;font:600 12px/1.4 "DM Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.service-detail-description{margin:0 0 23px;color:#706657;font:400 13px/1.75 "DM Sans",sans-serif}
+.service-detail-book{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:999px;background:linear-gradient(135deg,#a98550,#806039);color:#fffdf8;text-decoration:none;font:700 11px/1 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px rgba(126,94,49,.2)}
+.service-detail-book[hidden]{display:none}
+@keyframes detailFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes detailPanelIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:680px){
+ .service-detail-modal{padding:12px}
+ .service-detail-panel{display:block;width:100%;max-height:90svh;border-radius:18px}
+ .service-detail-image-wrap{height:190px;min-height:0}
+ .service-detail-image{height:190px;min-height:0;max-height:none}
+ .service-detail-copy{padding:22px 20px 24px}
+ .service-detail-copy h2{font-size:29px;margin-top:9px}
+ .service-detail-highlight{font-size:14px;line-height:1.6}
+ .service-detail-divider{margin:16px 0}
+ .service-detail-description{font-size:12px;margin-bottom:18px}
+ .service-detail-book{width:100%}
+ .service-details-button{min-height:32px;padding:6px 4px;font-size:clamp(7px,2.1vw,9px);letter-spacing:.025em}
+}
+@media(prefers-reduced-motion:reduce){
+ .service-details-button,.service-detail-backdrop,.service-detail-panel{animation:none!important;transition:none!important}
+}
