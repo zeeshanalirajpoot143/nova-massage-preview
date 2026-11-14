@@ -516,7 +516,7 @@ document.addEventListener("DOMContentLoaded", function () {
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
     try {
-      localStorage.setItem("nova-massage-theme", selected);
+      localStorage.setItem("nova-massage-theme-v2", selected);
     } catch (error) {
       // Theme remains usable when storage is unavailable.
     }
@@ -524,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let savedTheme = "light";
   try {
-    const storedTheme = localStorage.getItem("nova-massage-theme");
+    const storedTheme = localStorage.getItem("nova-massage-theme-v2");
     if (storedTheme === "light" || storedTheme === "dark") savedTheme = storedTheme;
   } catch (error) {
     // Keep the default light theme.
