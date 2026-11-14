@@ -2445,3 +2445,28 @@ body.cart-is-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   .service-cart,.service-cart-backdrop,.nav-cart-button{animation:none!important;transition:none!important}
 }
+
+
+/* Premium centre-focus slide motion — subtle, smooth and reduced-motion aware */
+#wellness .service-card,#popular .service-card{
+  transition:transform .48s cubic-bezier(.2,.75,.25,1),box-shadow .48s,border-color .48s,opacity .48s!important;
+  transform-origin:center bottom
+}
+#wellness .service-card.is-carousel-center,#popular .service-card.is-carousel-center{
+  transform:translateY(-9px) scale(1.025)!important;
+  border-color:rgba(180,139,79,.78)!important;
+  box-shadow:0 18px 38px rgba(65,49,27,.16),0 0 0 1px rgba(180,139,79,.16)!important;
+  z-index:2;opacity:1!important
+}
+#wellness .service-card:not(.is-carousel-center),#popular .service-card:not(.is-carousel-center){
+  transform:translateY(3px) scale(.975)!important;opacity:.92!important
+}
+#wellness .cards-grid,#popular .cards-grid{scroll-behavior:smooth}
+@media(max-width:760px){
+ #wellness .service-card.is-carousel-center,#popular .service-card.is-carousel-center{transform:translateY(-5px) scale(1.015)!important}
+ #wellness .service-card:not(.is-carousel-center),#popular .service-card:not(.is-carousel-center){transform:translateY(2px) scale(.985)!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #wellness .service-card,#popular .service-card{transition:none!important;transform:none!important}
+ #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
+}
