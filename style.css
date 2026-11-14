@@ -2593,3 +2593,93 @@ body.cart-is-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
  .service-details-button,.service-detail-backdrop,.service-detail-panel{animation:none!important;transition:none!important}
 }
+
+
+/* CLIENT UX REFINEMENT — browse treatments vertically; no carousel arrows or cart detour */
+#wellness .cards-grid,#popular .cards-grid{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:22px!important;width:100%!important;max-width:100%!important;
+  overflow:visible!important;overflow-x:visible!important;overflow-y:visible!important;
+  padding:12px 0 20px!important;margin:0!important;scroll-snap-type:none!important;
+  scroll-behavior:auto!important;touch-action:pan-y!important
+}
+#wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+  display:flex!important;flex-direction:column!important;width:auto!important;max-width:none!important;
+  min-width:0!important;height:auto!important;min-height:420px!important;max-height:none!important;
+  margin:0!important;scroll-snap-align:none!important;scroll-snap-stop:normal!important;
+  opacity:1!important;transform:none!important;animation:none!important
+}
+#wellness .service-card.image-card>img,#popular .service-card.image-card>img{
+  display:block!important;width:100%!important;height:190px!important;min-height:190px!important;
+  flex:0 0 190px!important;object-fit:cover!important
+}
+#wellness .service-card.image-card .service-content,#popular .service-card.image-card .service-content{
+  display:flex!important;flex:1!important;flex-direction:column!important;align-items:stretch!important;
+  gap:9px!important;padding:20px!important;min-height:0!important
+}
+#wellness .service-card.image-card .service-content h4,#popular .service-card.image-card .service-content h4{
+  min-height:0!important;font-size:clamp(19px,1.8vw,24px)!important;line-height:1.2!important
+}
+#wellness .service-card.image-card .service-content>p,#popular .service-card.image-card .service-content>p{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:4!important;
+  overflow:hidden!important;font-size:13px!important;line-height:1.65!important
+}
+#wellness .service-card .service-booking-link,#popular .service-card .service-booking-link,
+#wellness .service-card .secondary-button,#popular .service-card .secondary-button{
+  display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;
+  min-height:44px!important;margin-top:auto!important;font-size:11px!important
+}
+#wellness .service-card .service-details-button,#popular .service-card .service-details-button{
+  min-height:40px!important;margin-top:5px!important;font-size:10px!important
+}
+.service-carousel-controls,.service-swipe-hint{display:none!important}
+#wellness .service-card.is-carousel-center,#popular .service-card.is-carousel-center,
+#wellness .service-card:not(.is-carousel-center),#popular .service-card:not(.is-carousel-center){
+  transform:none!important;opacity:1!important;box-shadow:none!important
+}
+@media(max-width:760px){
+  #wellness .cards-grid,#popular .cards-grid{
+    grid-template-columns:minmax(0,1fr)!important;gap:14px!important;padding:10px 0 18px!important
+  }
+  #wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+    display:grid!important;grid-template-columns:minmax(104px,34%) minmax(0,1fr)!important;
+    align-items:stretch!important;min-height:0!important;height:auto!important;
+    border-radius:14px!important;overflow:hidden!important
+  }
+  #wellness .service-card.image-card>img,#popular .service-card.image-card>img{
+    width:100%!important;height:100%!important;min-height:100%!important;max-height:none!important;
+    flex:initial!important;object-fit:cover!important;align-self:stretch!important
+  }
+  #wellness .service-card.image-card .service-content,#popular .service-card.image-card .service-content{
+    display:flex!important;flex-direction:column!important;gap:7px!important;
+    min-width:0!important;padding:13px 12px!important
+  }
+  #wellness .service-card.image-card .service-content h4,#popular .service-card.image-card .service-content h4{
+    font-size:clamp(14px,4vw,18px)!important;line-height:1.2!important;min-height:0!important
+  }
+  #wellness .service-card.image-card .service-meta,#popular .service-card.image-card .service-meta{
+    font-size:10px!important;line-height:1.3!important
+  }
+  #wellness .service-card.image-card .service-content>p,#popular .service-card.image-card .service-content>p{
+    -webkit-line-clamp:3!important;font-size:11px!important;line-height:1.45!important
+  }
+  #wellness .service-card .service-booking-link,#popular .service-card .service-booking-link,
+  #wellness .service-card .secondary-button,#popular .service-card .secondary-button{
+    min-height:38px!important;margin-top:4px!important;font-size:10px!important
+  }
+  #wellness .service-card .service-details-button,#popular .service-card .service-details-button{
+    min-height:36px!important;margin-top:0!important;font-size:9px!important
+  }
+  .main-nav{grid-template-columns:minmax(0,1fr) 40px auto!important;grid-template-areas:"brand toggle theme"!important}
+}
+@media(max-width:390px){
+  #wellness .cards-grid>.service-card,#popular .cards-grid>.service-card{
+    grid-template-columns:100px minmax(0,1fr)!important
+  }
+}
+@media(min-width:761px) and (max-width:1050px){
+  #wellness .cards-grid,#popular .cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
+}
