@@ -725,6 +725,59 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   renderCart();
 
+  // Fast, controlled one-card carousel motion (about 230ms, with reduced-motion support).
+  const animateTreatmentTrack = (grid, direction, step) => {
+    const max = Math.max(0, grid.scrollWidth - grid.clientWidth);
+    const from = grid.scrollLeft;
+    const to = Math.max(0, Math.min(max, from + direction * step));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      grid.scrollLeft = to;
+      return;
+    }
+    const distance = to - from;
+    if (Math.abs(distance) < 1) return;
+    const duration = 230;
+    const start = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 4);
+    const frame = now => {
+      const progress = Math.min(1, (now - start) / duration);
+      grid.scrollLeft = from + distance * ease(progress);
+      if (progress < 1) window.requestAnimationFrame(frame);
+    };
+    window.requestAnimationFrame(frame);
+  };
+
+  // Reliable, responsive touch-swipe handling for treatment carousels.
+  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let swipePointerId = null;
+    let swipeStartTime = 0;
+    grid.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "touch") return;
+      swipeStartX = event.clientX;
+      swipeStartY = event.clientY;
+      swipeStartTime = performance.now();
+      swipePointerId = event.pointerId;
+    }, {passive:true});
+    grid.addEventListener("pointerup", event => {
+      if (event.pointerType !== "touch" || swipePointerId !== event.pointerId) return;
+      const dx = event.clientX - swipeStartX;
+      const dy = event.clientY - swipeStartY;
+      const elapsed = Math.max(1, performance.now() - swipeStartTime);
+      swipePointerId = null;
+      if (Math.abs(dx) < 24 || Math.abs(dx) < Math.abs(dy) * 1.05) return;
+      const firstCard = grid.querySelector(".service-card");
+      if (!firstCard) return;
+      const style = getComputedStyle(grid);
+      const gap = parseFloat(style.columnGap) || parseFloat(style.gap) || 0;
+      const step = firstCard.getBoundingClientRect().width + gap;
+      animateTreatmentTrack(grid, dx < 0 ? 1 : -1, step);
+    }, {passive:true});
+    grid.addEventListener("pointercancel", () => { swipePointerId = null; }, {passive:true});
+  });
+
+
   // Explore Treatments buttons scroll to the actual treatment cards.
   document.querySelectorAll("[data-explore-target]").forEach(button => {
     button.addEventListener("click", () => {
@@ -743,7 +796,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!grid || !card) return;
       const style = getComputedStyle(grid);
       const gap = parseFloat(style.columnGap) || parseFloat(style.gap) || 0;
-      grid.scrollBy({left: card.getBoundingClientRect().width + gap, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+      animateTreatmentTrack(grid, 1, card.getBoundingClientRect().width + gap);
     });
   });
 
@@ -776,38 +829,85 @@ document.addEventListener("DOMContentLoaded", function () {
       previous.disabled = grid.scrollLeft <= 2;
       next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
     };
-    previous.addEventListener("click", () => grid.scrollBy({left:-cardStep(),behavior:"smooth"}));
-    next.addEventListener("click", () => grid.scrollBy({left:cardStep(),behavior:"smooth"}));
+    previous.addEventListener("click", () => animateTreatmentTrack(grid, -1, cardStep()));
+    next.addEventListener("click", () => animateTreatmentTrack(grid, 1, cardStep()));
     grid.addEventListener("scroll", () => window.requestAnimationFrame(update), {passive:true});
     window.addEventListener("resize", update, {passive:true});
     update();
   });
 
-  // Reliable touch-swipe handling for treatment carousels.
-  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
-    let swipeStartX = 0;
-    let swipeStartY = 0;
-    let swipePointerId = null;
-    grid.addEventListener("pointerdown", event => {
-      if (event.pointerType !== "touch") return;
-      swipeStartX = event.clientX;
-      swipeStartY = event.clientY;
-      swipePointerId = event.pointerId;
-    }, {passive:true});
-    grid.addEventListener("pointerup", event => {
-      if (event.pointerType !== "touch" || swipePointerId !== event.pointerId) return;
-      const dx = event.clientX - swipeStartX;
-      const dy = event.clientY - swipeStartY;
-      swipePointerId = null;
-      if (Math.abs(dx) < 38 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
-      const firstCard = grid.querySelector(".service-card");
-      if (!firstCard) return;
-      const style = getComputedStyle(grid);
-      const gap = parseFloat(style.columnGap) || parseFloat(style.gap) || 0;
-      const step = firstCard.getBoundingClientRect().width + gap;
-      grid.scrollBy({left: dx < 0 ? step : -step, behavior:"smooth"});
-    }, {passive:true});
-    grid.addEventListener("pointercancel", () => { swipePointerId = null; }, {passive:true});
+  // Service detail experience: concise service-specific summaries plus the original full description.
+  const serviceHighlights = {
+    "X6XANGPWMXU4B6HJYA2ZSF6I":"A soothing blend of warm stones and calming scalp work to melt away everyday tension.",
+    "HVYJ25LS3ZKUAB7TLIMZ2WYJ":"Focused neck, shoulder and upper-back massage paired with a refreshing foot reflexology session.",
+    "OP3GGYAQREKWUCWMTUEKQUAE":"A focused jaw, face and neck treatment combined with deep-tissue work for the upper body.",
+    "PUYNGH63DZPZTDPHVV3SJGME":"A generous two-hour escape combining focused therapeutic pressure with deeply relaxing massage.",
+    "CAGPP7F3HHGY2B7J4KEX4V2Z":"A full-body massage with foot reflexology, a salt scrub and warm towels for a refreshed finish.",
+    "4BCBHGX3U5JWNAGL5E77T4NR":"A luxurious spa combination featuring Swedish massage, scalp care, foot scrub, steam and facial massage.",
+    "2ARGB3IGIQQC35GNO6KVQ2AI":"A 90-minute focused massage using therapeutic pressure to work through stubborn muscle tightness.",
+    "SG4LEG5JIPSKF53NH7UBZS42":"A gentle abdominal massage designed to encourage comfort, relaxation and mindful body care.",
+    "VPOLLJVI3RP5ZQHGAVYYNILW":"Gentle lymphatic-style massage paired with dry brushing for a light, refreshed spa experience.",
+    "GTLSBPQGGQMZWG26UVLRRE4A":"A calming foot-focused session using targeted pressure techniques to relax tired feet.",
+    "GJZTELLD76VKFG6G2RRQBOKR":"A targeted jaw, head, face and upper-body session using specialized massage techniques.",
+    "SFHO6VLIWIB66UF76BNN3FKU":"A gentle massage experience with focused abdominal and facial techniques for soothing relaxation.",
+    "IWUVUCNKKVI7AJO3ADPTZWSZ":"Focused care for the neck, shoulders, back, arms and hands to ease everyday upper-body tightness.",
+    "KXHYPTTUWKYQVMSA5HVF5A3V":"Warm stones and flowing Swedish techniques combine for a comforting, deeply relaxing treatment.",
+    "ZTL2WG6OLZMDP4N5TY64VVFQ":"A focused neck and shoulder-blade massage with precise pressure and gentle therapeutic stretching."
+  };
+  const detailModal = document.createElement("div");
+  detailModal.className = "service-detail-modal";
+  detailModal.hidden = true;
+  detailModal.innerHTML = '<div class="service-detail-backdrop" data-detail-close></div><section class="service-detail-panel" role="dialog" aria-modal="true" aria-labelledby="serviceDetailTitle" tabindex="-1"><button class="service-detail-close" type="button" aria-label="Close details">×</button><div class="service-detail-image-wrap"><img class="service-detail-image" alt=""></div><div class="service-detail-copy"><span class="service-detail-eyebrow">NOVA TREATMENT DETAILS</span><h2 id="serviceDetailTitle"></h2><p class="service-detail-meta"></p><p class="service-detail-highlight"></p><div class="service-detail-divider"></div><h3>What to expect</h3><p class="service-detail-description"></p><a class="service-detail-book" target="_blank" rel="noopener noreferrer">Book this treatment <span aria-hidden="true">↗</span></a></div></section>';
+  document.body.appendChild(detailModal);
+  const detailPanel = detailModal.querySelector(".service-detail-panel");
+  const detailClose = detailModal.querySelector(".service-detail-close");
+  let detailReturnFocus = null;
+  const closeServiceDetails = () => {
+    detailModal.hidden = true;
+    document.body.classList.remove("service-detail-open");
+    if (detailReturnFocus?.focus) detailReturnFocus.focus();
+  };
+  document.querySelectorAll(".service-card").forEach(card => {
+    const content = card.querySelector(".service-content");
+    if (!content || content.querySelector(".service-details-button")) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "service-details-button";
+    button.textContent = "View Details";
+    button.addEventListener("click", () => {
+      const title = card.querySelector("h4")?.textContent.trim() || "NOVA Treatment";
+      const meta = card.querySelector(".service-meta")?.textContent.trim() || "";
+      const description = card.querySelector(".service-content > p:not(.fine-print)")?.textContent.trim() || "";
+      const image = card.querySelector("img");
+      const booking = card.querySelector("[data-square-url]");
+      detailModal.querySelector("#serviceDetailTitle").textContent = title;
+      detailModal.querySelector(".service-detail-meta").textContent = meta;
+      detailModal.querySelector(".service-detail-highlight").textContent = serviceHighlights[card.dataset.serviceId] || description;
+      detailModal.querySelector(".service-detail-description").textContent = description;
+      const detailImage = detailModal.querySelector(".service-detail-image");
+      detailImage.src = image?.currentSrc || image?.src || "";
+      detailImage.alt = image?.alt || title;
+      detailImage.parentElement.hidden = !detailImage.src;
+      const bookLink = detailModal.querySelector(".service-detail-book");
+      if (booking) {
+        bookLink.href = booking.dataset.squareUrl || booking.href;
+        bookLink.hidden = false;
+      } else {
+        bookLink.hidden = true;
+        bookLink.removeAttribute("href");
+      }
+      detailReturnFocus = button;
+      detailModal.hidden = false;
+      document.body.classList.add("service-detail-open");
+      detailClose.focus();
+    });
+    const bookingButton = content.querySelector(".secondary-button");
+    content.insertBefore(button, bookingButton || null);
+  });
+  detailClose.addEventListener("click", closeServiceDetails);
+  detailModal.querySelector("[data-detail-close]").addEventListener("click", closeServiceDetails);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !detailModal.hidden) closeServiceDetails();
   });
 
   // FREE CALLBACK REQUEST: stored in the NOVA admin dashboard; no SMS/call automation.
