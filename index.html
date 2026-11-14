@@ -52,7 +52,6 @@
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
         </div>
-        <button type="button" class="nav-cart-button" id="navCartButton" aria-controls="serviceCart" aria-expanded="false"><span aria-hidden="true">♧</span> Cart <span class="nav-cart-count" id="navCartCount">0</span></button>
         <div class="theme-switch" role="group" aria-label="Choose website theme">
           <button type="button" class="theme-option is-active" data-theme-choice="light" aria-pressed="true">Light</button>
           <button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false">Dark</button>
@@ -197,7 +196,6 @@
           Wellness Combo Massages
         </h2>
         <button class="services-explore-now" type="button" data-explore-target="wellnessTreatments">Explore Treatments <span aria-hidden="true">↗</span></button>
-        <button class="service-swipe-hint" type="button" data-swipe-target="wellnessTreatments">Swipe to explore treatments <span aria-hidden="true">→</span></button>
         <div class="cards-grid three-cols" id="wellnessTreatments">
 
           <!-- Stone + Scalp -->
@@ -356,7 +354,6 @@
         </div>
         <p class="service-results" id="serviceResults" aria-live="polite">Explore all treatments</p>
         <button class="services-explore-now popular-explore-now" type="button" data-explore-target="popularTreatments">Explore Treatments <span aria-hidden="true">↗</span></button>
-        <button class="service-swipe-hint" type="button" data-swipe-target="popularTreatments">Swipe to explore treatments <span aria-hidden="true">→</span></button>
         <div class="cards-grid three-cols popular-grid" id="popularTreatments">
 
           <!-- 2 Hour Bliss -->
@@ -1316,13 +1313,6 @@
 
 
   
-
-  <div class="service-cart-backdrop" id="serviceCartBackdrop" hidden></div>
-  <aside class="service-cart" id="serviceCart" role="dialog" aria-modal="true" aria-labelledby="serviceCartTitle" aria-hidden="true" inert>
-    <div class="service-cart-header"><div><span class="section-kicker">YOUR NOVA SELECTION</span><h2 id="serviceCartTitle">Your Cart <span id="serviceCartCountLabel">(0)</span></h2></div><button type="button" class="service-cart-close" id="serviceCartClose" aria-label="Close cart">×</button></div>
-    <div class="service-cart-items" id="serviceCartItems"><p class="cart-empty">Your cart is empty. Add a treatment to get started.</p></div>
-    <div class="service-cart-footer"><div class="service-cart-total"><span>Estimated total</span><strong id="serviceCartTotal">$0</strong></div><p class="service-cart-disclaimer">Your selection is a planning list, not a confirmed appointment. Square confirms service availability, appointment time and final payment.</p><button type="button" class="primary-button service-cart-checkout" id="serviceCartCheckout" disabled>Continue to Square Booking</button><button type="button" class="service-cart-continue" id="serviceCartContinue">Continue exploring</button></div>
-  </aside>
 
   <div class="concierge" id="novaConcierge">
     <button class="concierge-toggle" id="conciergeToggle" type="button" aria-expanded="false" aria-controls="conciergePanel"><span class="concierge-toggle-icon" aria-hidden="true">✦</span><span>Nova Concierge</span></button>
