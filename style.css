@@ -2470,3 +2470,35 @@ body.cart-is-open{overflow:hidden}
  #wellness .service-card,#popular .service-card{transition:none!important;transform:none!important}
  #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
 }
+
+
+/* MOBILE NAVIGATION — elegant animated NOVA menu */
+.mobile-menu-toggle{display:none}
+@media(max-width:760px){
+  .main-nav{display:grid!important;grid-template-columns:minmax(0,1fr) 40px auto auto!important;grid-template-areas:"brand toggle cart theme"!important;align-items:center!important;justify-content:stretch!important;gap:7px!important;min-height:66px!important;padding:10px 12px!important;overflow:visible!important}
+  .main-nav .brand{grid-area:brand!important;min-width:0!important;font-size:clamp(15px,4.6vw,21px)!important;letter-spacing:.08em!important}
+  .mobile-menu-toggle{grid-area:toggle;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:40px;height:40px;padding:9px;border:1px solid rgba(152,116,67,.32);border-radius:12px;background:linear-gradient(145deg,#fffdf8,#efe5d3);color:#604a2e;box-shadow:0 4px 14px rgba(65,49,27,.09);cursor:pointer;transition:background .25s,transform .25s,border-color .25s}
+  .mobile-menu-toggle span{display:block;width:19px;height:2px;border-radius:3px;background:#8e6b3c;transition:transform .32s ease,opacity .22s ease,width .25s}
+  .mobile-menu-toggle[aria-expanded="true"]{background:linear-gradient(145deg,#ead9b8,#c9a977);border-color:#b18a54}
+  .mobile-menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)}
+  .mobile-menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;width:4px}
+  .mobile-menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)}
+  .main-nav .nav-cart-button{grid-area:cart!important;order:initial!important;margin:0!important;min-height:36px!important;padding:0 8px!important;font-size:9px!important}
+  .main-nav .theme-switch{grid-area:theme!important;justify-self:end!important;margin:0!important;gap:2px!important;padding:3px!important}
+  .main-nav .theme-option{min-height:30px!important;padding:0 6px!important;font-size:9px!important}
+  .main-nav .nav-links{grid-area:auto!important;position:absolute!important;top:calc(100% + 1px)!important;left:0!important;right:0!important;z-index:100001!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;flex-wrap:nowrap!important;gap:0!important;width:100%!important;min-width:0!important;max-height:0!important;overflow:hidden!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;padding:0 16px!important;margin:0!important;white-space:normal!important;background:rgba(255,253,248,.98)!important;border:0 solid rgba(152,116,67,.18)!important;border-top:0!important;border-radius:0 0 18px 18px!important;box-shadow:0 18px 34px rgba(50,38,22,.13)!important;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);transition:max-height .42s cubic-bezier(.2,.75,.25,1),opacity .28s ease,visibility .28s,padding .35s ease!important}
+  .main-nav.mobile-menu-open .nav-links{max-height:min(75svh,520px)!important;overflow-y:auto!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;padding:10px 16px 16px!important;border-width:1px!important;border-top:0!important}
+  .main-nav .nav-links a{display:flex!important;align-items:center!important;min-height:49px!important;flex:0 0 auto!important;padding:0 12px!important;border-bottom:1px solid rgba(152,116,67,.13)!important;border-radius:0!important;background:transparent!important;color:#493a27!important;font-size:11px!important;font-weight:700!important;letter-spacing:.12em!important;text-transform:uppercase!important;white-space:normal!important;transform:translateY(-8px);opacity:0;transition:transform .3s ease,opacity .3s ease,background .2s ease!important}
+  .main-nav.mobile-menu-open .nav-links a{transform:translateY(0);opacity:1}
+  .main-nav .nav-links a:last-child{border-bottom:0!important}
+  .main-nav .nav-links a:active,.main-nav .nav-links a:focus-visible{background:#f1e8d9!important}
+  body.mobile-menu-active{overflow:hidden}
+}
+@media(max-width:390px){
+  .main-nav{grid-template-columns:minmax(0,1fr) 36px auto auto!important;gap:5px!important;padding-inline:9px!important}
+  .main-nav .brand{font-size:14px!important;letter-spacing:.05em!important}
+  .mobile-menu-toggle{width:36px;height:38px}
+  .main-nav .nav-cart-button{padding:0 6px!important;font-size:8px!important}
+  .main-nav .theme-option{padding:0 5px!important;font-size:8px!important}
+}
+@media(prefers-reduced-motion:reduce){.mobile-menu-toggle,.mobile-menu-toggle span,.main-nav .nav-links,.main-nav .nav-links a{transition:none!important}}
