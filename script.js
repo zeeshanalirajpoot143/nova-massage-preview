@@ -725,6 +725,28 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   renderCart();
 
+  // Explore Treatments buttons scroll to the actual treatment cards.
+  document.querySelectorAll("[data-explore-target]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.exploreTarget);
+      if (!target) return;
+      target.scrollIntoView({behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center", inline:"nearest"});
+    });
+  });
+
+  // The swipe prompt is also an accessible, tappable next-card control.
+  document.querySelectorAll("[data-swipe-target]").forEach(button => {
+    button.setAttribute("aria-label", "Show the next treatment");
+    button.addEventListener("click", () => {
+      const grid = document.getElementById(button.dataset.swipeTarget);
+      const card = grid?.querySelector(".service-card");
+      if (!grid || !card) return;
+      const style = getComputedStyle(grid);
+      const gap = parseFloat(style.columnGap) || parseFloat(style.gap) || 0;
+      grid.scrollBy({left: card.getBoundingClientRect().width + gap, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+    });
+  });
+
   // Three-card carousel: swipe and arrow controls advance the track by one card.
   document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
     grid.setAttribute("role", "region");
