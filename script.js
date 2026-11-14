@@ -761,6 +761,33 @@ document.addEventListener("DOMContentLoaded", function () {
     update();
   });
 
+  // Reliable touch-swipe handling for treatment carousels.
+  document.querySelectorAll("#wellness .cards-grid, #popular .cards-grid").forEach(grid => {
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let swipePointerId = null;
+    grid.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "touch") return;
+      swipeStartX = event.clientX;
+      swipeStartY = event.clientY;
+      swipePointerId = event.pointerId;
+    }, {passive:true});
+    grid.addEventListener("pointerup", event => {
+      if (event.pointerType !== "touch" || swipePointerId !== event.pointerId) return;
+      const dx = event.clientX - swipeStartX;
+      const dy = event.clientY - swipeStartY;
+      swipePointerId = null;
+      if (Math.abs(dx) < 38 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
+      const firstCard = grid.querySelector(".service-card");
+      if (!firstCard) return;
+      const style = getComputedStyle(grid);
+      const gap = parseFloat(style.columnGap) || parseFloat(style.gap) || 0;
+      const step = firstCard.getBoundingClientRect().width + gap;
+      grid.scrollBy({left: dx < 0 ? step : -step, behavior:"smooth"});
+    }, {passive:true});
+    grid.addEventListener("pointercancel", () => { swipePointerId = null; }, {passive:true});
+  });
+
   // FREE CALLBACK REQUEST: stored in the NOVA admin dashboard; no SMS/call automation.
   const callbackRequestForm = document.getElementById("callbackRequestForm");
   if (callbackRequestForm) callbackRequestForm.addEventListener("submit", async event => {
