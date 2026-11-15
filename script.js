@@ -694,8 +694,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const submit=document.getElementById("callbackSubmit"),status=document.getElementById("callbackStatus");
     const payload={customer_name:document.getElementById("callbackName").value.trim(),customer_phone:document.getElementById("callbackPhone").value.trim(),customer_email:document.getElementById("callbackEmail").value.trim(),message:document.getElementById("callbackMessage").value.trim(),website:callbackRequestForm.querySelector('[name="website"]').value};
     if(submit)submit.disabled=true;if(status)status.textContent="Sending your callback request…";
-    try{const response=await fetch("/api/callback-request",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const result=await response.json();if(!response.ok)throw new Error(result.error||"Unable to send your request.");callbackRequestForm.reset();if(status)status.textContent="Your request has been saved. The studio will follow up when available. For urgent help, call or WhatsApp +1 (708) 400-9333."}
-    catch(error){if(status)status.textContent=error.message+" You can also WhatsApp the studio."}
+    try{const response=await fetch("/api/callback-request",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const result=await response.json();if(!response.ok)throw new Error(result.error||"Unable to send your request.");callbackRequestForm.reset();if(status)status.textContent="Your request has been saved. The studio will call you back when available. For urgent help, call +1 (708) 400-9333."}
+    catch(error){if(status)status.textContent=error.message+" Please call +1 (708) 400-9333 if you need immediate assistance."}
     finally{if(submit)submit.disabled=false}
   });
 
@@ -758,7 +758,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  // NOVA AI CONCIERGE: uses the Cloudflare Workers AI binding when enabled.
+  // NOVA AI CONCIERGE: verify the live Cloudflare AI binding before inviting questions.
+  fetch("/api/health").then(response => response.ok ? response.json() : null).then(health => {
+    if (!novaChatStatus || !health) return;
+    novaChatStatus.textContent = health.ai ? "NOVA AI Concierge · Online 24/7" : "NOVA AI Concierge · Setup is not complete yet";
+  }).catch(() => { if (novaChatStatus) novaChatStatus.textContent = "NOVA AI Concierge · Connection unavailable"; });
   const novaChatForm = document.getElementById("novaChatForm");
   const novaChatInput = document.getElementById("novaChatInput");
   const novaChatStatus = document.getElementById("novaChatStatus");
@@ -776,10 +780,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) throw new Error(result.error || "The assistant is temporarily unavailable.");
       if (conciergeAnswer) conciergeAnswer.textContent = result.reply;
       novaChatInput.value = "";
-      if (novaChatStatus) novaChatStatus.textContent = "AI concierge · For urgent booking changes, contact the studio directly.";
+      if (novaChatStatus) novaChatStatus.textContent = "NOVA AI Concierge · Online";
     } catch (error) {
-      if (conciergeAnswer) conciergeAnswer.textContent = error.message + " You can reach us on WhatsApp at +1 (708) 400-9333.";
-      if (novaChatStatus) novaChatStatus.textContent = "WhatsApp support is available.";
+      if (conciergeAnswer) conciergeAnswer.textContent = error.message + " Please call NOVA MASSAGE at +1 (708) 400-9333.";
+      if (novaChatStatus) novaChatStatus.textContent = "AI service temporarily unavailable · Please call the studio.";
     } finally { if (submit) submit.disabled = false; }
   });
 
