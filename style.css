@@ -2683,3 +2683,18 @@ body.cart-is-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   #wellness .cards-grid,#popular .cards-grid{scroll-behavior:auto!important}
 }
+
+
+/* NOVA AI concierge and brand clarity refinements */
+@media(max-width:760px){
+  .main-nav .brand{display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;min-width:0!important;max-width:100%!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;font-size:clamp(13px,3.9vw,18px)!important;letter-spacing:.035em!important;line-height:1.15!important}
+}
+.nova-whatsapp-float{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:112px!important;padding:0 16px!important;border-radius:999px!important;font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important}
+.callback-request-box{margin-top:16px!important;padding:15px!important;border:1px solid rgba(201,169,119,.62)!important;border-radius:12px!important;background:rgba(201,169,119,.1)!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+.callback-request-box summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;min-height:38px!important;color:var(--nova-gold-light)!important;font-size:12px!important;font-weight:800!important;letter-spacing:.025em!important;cursor:pointer!important;list-style:none!important}
+.callback-request-box summary::-webkit-details-marker{display:none!important}
+.callback-request-box summary:after{content:"+";display:grid;place-items:center;flex:0 0 26px;width:26px;height:26px;border:1px solid currentColor;border-radius:50%;font-size:18px!important}
+.callback-request-box[open] summary:after{content:"−"}
+.callback-request-box>p{font-size:11px!important;line-height:1.6!important}
+body[data-theme="light"] .callback-request-box{border-color:rgba(133,101,58,.38)!important;background:#f8f1e5!important}
+body[data-theme="light"] .callback-request-box summary{color:#72532d!important}
