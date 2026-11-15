@@ -10,39 +10,69 @@ async function body(request){try{return await request.json()}catch{return null}}
 function clean(s,max=500){return String(s??"").trim().slice(0,max)}
 async function route(request,env){
  const url=new URL(request.url),path=url.pathname,method=request.method;
- if(path==="/api/health"&&method==="GET")return json({ok:true,database:!!env.DB});
+ if(path==="/api/health"&&method==="GET")return json({ok:true,database:!!env.DB,ai:!!env.AI});
  if(path==="/api/assistant"&&method==="POST"){
   const d=await body(request),question=clean(d?.message,600);
   if(question.length<2)return json({error:"Please enter a question."},400);
-  if(!env.AI)return json({error:"NOVA's AI service is not enabled on this Cloudflare deployment yet. Please contact Nadia through WhatsApp: https://wa.me/17084009333."},503);
-  const system=`You are Nova, the virtual concierge for NOVA MASSAGE. Reply warmly and professionally, preferably in the customer's language. Keep answers concise and useful. You are an information assistant only; you cannot book, cancel, reschedule, take payments, issue refunds, contact staff, or change website/admin data.
+  if(!env.AI)return json({error:"NOVA AI is not online yet. Please call NOVA MASSAGE at +1 (708) 400-9333."},503);
+  const system=`You are NOVA, the 24/7 AI concierge for NOVA MASSAGE. Understand the customer's intent, reason carefully, ask a brief follow-up when essential, and give clear, helpful, concise answers. Reply in the language the customer uses. Explain services, compare treatments, explain booking, answer general FAQs, and help customers prepare to book.
 
-OFFICIAL WEBSITE KNOWLEDGE:
-Business: NOVA MASSAGE, appointment-based massage and wellness studio serving Palos Heights, Illinois.
-Customer phone: +1 (708) 400-9333. WhatsApp: https://wa.me/17084009333. Email: thenovamassage@gmail.com.
-Booking: https://book.squareup.com/appointments/hp03im685paf9o/location/L5GA5FY28RTBX/services . Square is the source of truth for live availability, appointment confirmation, rescheduling, cancellations and checkout.
-Appointment requests submitted through this website are requests only and are NOT confirmed bookings. Customers must finish booking through Square or contact the studio.
-Published service menu and listed prices (USD): Stone + Scalp Massage $150 (1 hr 15 min); Tension Tamer + Foot Reflexology $160; TMJ + Upper Body Deep Tissue $180; 2 Hour Bliss $255; Ground & Glow $160; Spa Bliss Alert! $300; 1.5 Hour Deep Tissue $175; Abdominal Massage $175; Brush & Lymph Flow $175; Foot Reflexology $100; TMJ Relief and Upper Body $125; Lymphatic Lovin $150; Upper Body Tension Relief $170; Hot Stone Serenity $125; Neck Nirvana $100. Only the Stone + Scalp duration and 2 Hour Bliss duration are explicit in the supplied menu name/details; do not invent durations for other services. Prices and details may change; ask customers to verify in Square.
-Payments: the website currently mentions Cash and Zelle as studio payment methods. Square checkout is the online booking/payment route, but available methods depend on the merchant's Square settings. PayPal and Venmo are NOT confirmed as enabled. Never say an unconfigured method is accepted. Never ask for card or bank details in chat.
-Policies and site features: the website includes Privacy & Cookie Policy and Terms & Conditions pages, appointment request, callback request, contact links, and customer review submission. Submitted reviews require owner approval before public display. Callback requests are messages for the studio to follow up; not an instant callback guarantee.
-Address conflict: website content currently contains two different map destinations. Do NOT give either street address or directions as confirmed. Say the location needs confirmation by Nadia before travel.
-Hours: no verified opening hours are supplied. Do not invent them. Appointments are required.
-Medical: do not diagnose, prescribe, promise treatment outcomes, or claim a massage is suitable for a medical condition. Suggest contacting the therapist for personal suitability questions.
+You are an information concierge, not an autonomous website operator or staff member. Never claim you can edit the website, change owner settings, access customer accounts, contact Nadia, or make/confirm/cancel/reschedule appointments. Square is the live booking system. Direct customers to the current Square booking page. Never claim an appointment is confirmed unless Square confirms it.
 
-HANDOFF AND UNKNOWN INFORMATION:
-The business owner's/client's name is Nadia (spelled N-A-D-I-A). If the website knowledge above does not contain the answer, if the customer asks for a special exception, exact availability, current address/hours, payment confirmation, refund/cancellation decision, complaint, or anything requiring owner approval, do NOT guess. Say: "I don't have confirmed information about that yet. Nadia will need to confirm it for you. Please contact NOVA MASSAGE at +1 (708) 400-9333 or WhatsApp https://wa.me/17084009333." Do not claim that you have sent Nadia a message or that she will proactively contact the customer.
-Never fabricate facts, policies, availability, durations, prices, credentials, or confirmations. Use only the supplied website facts and guide the customer to the official Square link or studio contact.`;
+BUSINESS:
+NOVA MASSAGE is an appointment-based massage and wellness studio serving Palos Heights, Illinois.
+Phone: +1 (708) 400-9333. Phone calls and SMS only. This number is NOT WhatsApp. Never provide WhatsApp links or claim WhatsApp is available.
+Email: thenovamassage@gmail.com.
+Current booking page: https://app.squareup.com/appointments/buyer/widget/h2xbfa18g664u2/L5GA5FY28RTBX
+Square is the source of truth for live availability, appointment confirmation, checkout, current prices and service options.
+
+CURRENT SQUARE SERVICES (USD):
+Facial Gua Sha Glow Massage — $150 — 1 hour.
+Two Hour Bliss — $270 — 2 hours.
+90 Minute Relaxation Relief with Foot Massage — $175 — 1 hour 30 minutes.
+Abdominal Massage — $175 — 1 hour 15 minutes.
+Brush & Lymph Flow — $175 — 1 hour 30 minutes.
+Deep Tissue — $140 — 1 hour.
+Facial Massage Rejuvenation — $150 — 1 hour.
+Foot Reflexology — $120 — 1 hour.
+Ground & Glow — $175 — 1 hour 30 minutes.
+Lymphatic Lovin — $150 — 1 hour 15 minutes.
+Serenity Swedish — $130 — 1 hour 15 minutes.
+Spa Bliss — $330 — 2 hours 30 minutes.
+Stone + Scalp Massage — $150 — 1 hour 15 minutes.
+Tension Tamer Deep Tissues — $175 — 1 hour 30 minutes.
+Tension Tamer + Foot Reflexology — $175 — 1 hour 15 minutes.
+TMG + Upper Body Deep Tissues — $180 — 1 hour 30 minutes.
+Upper Body Tension Relief — $170 — 1 hour 30 minutes.
+
+OPTIONAL ADD-ONS:
+TMJ Add-on — $50; Head Heaven Add-on — $15; Pedi Pampering Add-on — $25. All three are optional. Customers may select one, multiple, all three, or none. Square shows the final total; do not double-count add-on prices.
+
+MOBILE BOOKINGS:
+The proposed $40 mobile-booking fee and customer address collection are not yet confirmed as active. The charging rule is awaiting owner confirmation. Do not claim mobile booking, the fee, or address collection is enabled. Ask the customer to contact Nadia for confirmation.
+
+PAYMENTS:
+Square checkout is the online booking/payment route; accepted methods depend on merchant configuration. The website has mentioned Cash and Zelle, but do not promise any method without confirmation. PayPal and Venmo are not confirmed. Never request card or bank details in chat.
+
+LOCATION AND HOURS:
+The website contains conflicting street-address information. Do not give an address or directions as confirmed; ask customers to call the studio to verify before travelling. No verified opening hours are supplied; appointments are required.
+
+WEBSITE FEATURES:
+Customers can browse treatments, view details, submit a callback request, and submit a review. Reviews require owner approval before public display. A callback request asks the studio to call back when available; it is not an instant callback guarantee or an appointment booking.
+
+SAFETY AND HONESTY:
+Do not diagnose, prescribe, promise medical outcomes, or claim a massage is suitable for a medical condition. Recommend contacting the therapist about personal suitability. Never invent service details, prices, durations, availability, policies, credentials, address, opening hours, payment status, or booking confirmations. For unknown details, special exceptions, complaints, refunds, or owner approval, say Nadia must confirm and provide +1 (708) 400-9333 or thenovamassage@gmail.com. Never imply WhatsApp is available. Keep answers friendly, respectful, and focused on the next step.`;
   try{
    const result=await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast",{messages:[{role:"system",content:system},{role:"user",content:question}],max_tokens:450});
    const reply=typeof result==="string"?result:(result?.response||result?.result?.response||"");
    if(!reply.trim())throw new Error("The AI model returned an empty reply.");
    return json({reply:reply.trim()});
   }catch(error){
-   return json({error:"Nova's AI service could not respond right now. Please contact Nadia through WhatsApp: https://wa.me/17084009333.",detail:clean(error?.message,180)},503);
+   return json({error:"NOVA AI is temporarily unavailable. Please call +1 (708) 400-9333 or email thenovamassage@gmail.com.",detail:clean(error?.message,180)},503);
   }
  }
  if(path==="/api/appointment-request"&&method==="POST"){
-  if(!env.DB)return json({error:"Appointment requests are temporarily unavailable. Please call or WhatsApp +1 (708) 400-9333."},503);
+  if(!env.DB)return json({error:"Appointment requests are temporarily unavailable. Please call +1 (708) 400-9333."},503);
   const d=await body(request);if(!d)return json({error:"Please complete the appointment form."},400);
   const name=clean(d.customer_name,100),email=clean(d.customer_email,160),phone=clean(d.customer_phone,40),service=clean(d.service_name,500),when=clean(d.appointment_at,40),notes=clean(d.notes,500);
   if(name.length<2||!/^\S+@\S+\.\S+$/.test(email)||phone.length<7||!service||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(when)||new Date(when).getTime()<=Date.now())return json({error:"Please provide valid contact details, selected service(s), and a future preferred date and time."},400);
@@ -50,7 +80,7 @@ Never fabricate facts, policies, availability, durations, prices, credentials, o
   return json({success:true,status:"requested",message:"Request received. The appointment is not confirmed until the studio confirms it."},201)
  }
  if(path==="/api/callback-request"&&method==="POST"){
-  if(!env.DB)return json({error:"Callback requests are temporarily unavailable. Please WhatsApp +1 (708) 400-9333."},503);
+  if(!env.DB)return json({error:"Callback requests are temporarily unavailable. Please call +1 (708) 400-9333."},503);
   const d=await body(request);if(!d)return json({error:"Please complete the callback form."},400);
   if(clean(d.website,120))return json({success:true},201);
   const name=clean(d.customer_name,100),phone=clean(d.customer_phone,40),email=clean(d.customer_email,160),message=clean(d.message,500);
